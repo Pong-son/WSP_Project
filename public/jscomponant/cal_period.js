@@ -81,19 +81,31 @@ const loadCalTable = async () => {
     }
     // controller for the and delete btn
     document.querySelectorAll('[data-edit]')?.forEach(edit => {
-      edit.addEventListener('click', (e) => {
-        const target = e.target.getAttribute('data-edit')
-        document.querySelector(`[data-param="${target}"]`).removeAttribute("disabled")
-        document.querySelector(`[data-cal-period="${target}"]`).removeAttribute("disabled")
-        document.querySelector(`[data-done="${target}"]`).classList.remove('hide')
-        document.querySelector(`[data-cancel="${target}"]`).classList.remove('hide')
-        document.querySelector(`[data-edit="${target}"]`).classList.add('hide')
-      })
+      if (window.sessionStorage.getItem('admin')) {
+        edit.addEventListener('click', (e) => {
+          const target = e.target.getAttribute('data-edit')
+          document.querySelector(`[data-param="${target}"]`).removeAttribute("disabled")
+          document.querySelector(`[data-cal-period="${target}"]`).removeAttribute("disabled")
+          document.querySelector(`[data-done="${target}"]`).classList.remove('hide')
+          document.querySelector(`[data-cancel="${target}"]`).classList.remove('hide')
+          document.querySelector(`[data-edit="${target}"]`).classList.add('hide')
+        })
+      } else {
+        edit.addEventListener('click', () => {
+          alert('Please Find Admin!')
+        })
+      }
     })
     document.querySelectorAll('[data-delete]')?.forEach(del => {
-      del.addEventListener('click', (e) => {
-        delFtn(e)
-      })
+      if (window.sessionStorage.getItem('admin')) {
+        del.addEventListener('click', (e) => {
+          delFtn(e)
+        })
+      } else {
+        del.addEventListener('click', () => {
+          alert('Please Find Admin!')
+        })
+      }
     })
     document.querySelectorAll('[data-done]')?.forEach(done => {
       done.addEventListener('click', (e) => {
@@ -128,7 +140,7 @@ const loadCalTable = async () => {
     if(data.length !== 0) {
       let search_select = document.querySelector('#search_select')
       search_select.innerHTML = '<option selected>- Search By -</option>'
-      let item = Object.keys(data.data[0])
+      let item = Object?.keys(data.data[0])
       for(let i = 0; i < item.length -2; i++) {
         search_select.innerHTML += `<option value='${item[i]}'>${item[i]}</option>`
       }
@@ -201,8 +213,7 @@ document.querySelector('#search_btn')?.addEventListener('click', () => {
   let search_select = document.querySelector('#search_select').value
   let search_item = document.querySelector('#search_item').value
   sort_by_item = search_select
-  sort_by = search_item
-  
+  sort_by = search_item.toLowerCase()
   loadCalTable()
 })
 

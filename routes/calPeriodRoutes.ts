@@ -36,6 +36,12 @@ const getCalPeriod = async (req: express.Request, res: express.Response) => {
 
 		let calPeriodList:any = []
 		if (sort_by) {
+			calPeriodList = await client.query('select * from cal_period')
+			await calPeriodList.rows?.forEach((item:any) => {
+				if (item[`${sort_by_item}`]?.toLowerCase() === req.query.sort_by) {
+					sort_by = item[`${sort_by_item}`]
+				}
+			});
 			calPeriodList = await client.query(
 				`select * from cal_period WHERE ${sort_by_item} like '%${sort_by}%' ORDER BY ${order_by} ${order_by_ascending}`
 			)
@@ -60,8 +66,8 @@ const postCalPeriod = async (req: express.Request, res: express.Response) => {
 	try {
     console.log(req.body, new Date)
 
-		let calPeriodList:any = []
-    calPeriodList
+	let calPeriodList:any = []
+	calPeriodList
     calPeriodList = await client.query(
       'INSERT INTO cal_period (parameter,cal_period,created_at) values ($1,$2,$3)',
         [req.body.parameter,req.body.cal_period,new Date]
