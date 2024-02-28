@@ -1,7 +1,7 @@
 import { getData } from './get_data.js'
 import { pagination } from './pagination.js'
 
-let cal_period_table = document.querySelector('#cal_period_table')
+let supplier_list_table = document.querySelector('#supplier_list_table')
 // fixed variable
 let each_page_show = Number(document.querySelector('#each_page_show')?.value);
 let current_page = 1;
@@ -14,34 +14,40 @@ let data_in_table = [];
 
 // add new data
 document
-	.querySelector('#calPeriodForm')
+	.querySelector('#supplierListForm')
 	?.addEventListener('submit', async (event) => {
 		event.preventDefault() // To prevent the form from submitting synchronously
 		const form = event.target
-		let parameter = form.parameter.value
-		let calPeriod = form.calPeriod.value
+		let company_name = form.company_name.value
+		let type_of_service = form.type_of_service.value
+		let contact_person = form.contact_person.value
+		let contact_email = form.contact_email.value
 
-		const res = await fetch('/cal_period_list', {
+		const res = await fetch('/supplier_list', {
       method: 'POST',
 			headers: {
         'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-        parameter: parameter,
-				cal_period: calPeriod
+        company_name: company_name,
+				type_of_service: type_of_service,
+        contact_person: contact_person,
+        contact_email: contact_email
 			})
 		})
 		const result = await res.json()
 
-		document.querySelector('#parameter').value = ''
-		document.querySelector('#calPeriod').value = ''
+		document.querySelector('#company_name').value = ''
+		document.querySelector('#type_of_service').value = ''
+		document.querySelector('#contact_person').value = ''
+		document.querySelector('#contact_email').value = ''
 
-  loadCalTable()
+  loadSupplierTable()
 	});
 
-const loadCalTable = async () => {
+const loadSupplierTable = async () => {
   try {
-    data = await getData(`cal_period_list?page=${current_page}&limit=${each_page_show}&order_by=${order_by}&order_by_ascending=${order_by_ascending}&sort_by_item=${sort_by_item}&sort_by=${sort_by}`)
+    data = await getData(`supplier_list?page=${current_page}&limit=${each_page_show}&order_by=${order_by}&order_by_ascending=${order_by_ascending}&sort_by_item=${sort_by_item}&sort_by=${sort_by}`)
 
     let start = (current_page - 1) * each_page_show
     let end = start + each_page_show
@@ -53,22 +59,24 @@ const loadCalTable = async () => {
     
     document.querySelector('[data-pre]')?.addEventListener('click',() => {
       current_page = current_page - 1
-      loadCalTable()
+      loadSupplierTable()
     })
     document.querySelector('[aria-label="Next"]')?.addEventListener('click',() => {
       current_page = current_page + 1
-      loadCalTable()
+      loadSupplierTable()
     })
     // generate table
     if(data.length === 0) {
-      cal_period_table.innerHTML = ''
-      cal_period_table.innerHTML = '<tr><th>No DATA</th></tr>'
+      supplier_list_table.innerHTML = ''
+      supplier_list_table.innerHTML = '<tr><th>No DATA</th></tr>'
     } else {
-      cal_period_table.innerHTML = ''
+      supplier_list_table.innerHTML = ''
       data_in_table.forEach( item => {
-        cal_period_table.innerHTML += `<tr id=${item.id}><th scope="row">${item.id}</th>
-        <td><input disabled type='text' data-param="${item.id}" value=${item.parameter}></td>
-        <td><input disabled type='text' data-cal-period="${item.id}" value=${item.cal_period}></td>
+        supplier_list_table.innerHTML += `<tr id=${item.id}><th scope="row">${item.id}</th>
+        <td><input disabled type='text' data-company-name="${item.id}" value=${item.company_name}></td>
+        <td><input disabled type='text' data-type-of-service="${item.id}" value=${item.type_of_service}></td>
+        <td><input disabled type='text' data-contact-person="${item.id}" value=${item.contact_person}></td>
+        <td><input disabled type='text' data-contact-email="${item.id}" value=${item.contact_email}></td>
         <td>
         <button data-edit="${item.id}">Edit</button>
         <button data-done="${item.id}" class="hide">Done</button>
@@ -85,8 +93,10 @@ const loadCalTable = async () => {
       if (window.sessionStorage.getItem('admin')) {
         edit.addEventListener('click', (e) => {
           const target = e.target.getAttribute('data-edit')
-          document.querySelector(`[data-param="${target}"]`).removeAttribute("disabled")
-          document.querySelector(`[data-cal-period="${target}"]`).removeAttribute("disabled")
+          document.querySelector(`[company-name="${target}"]`).removeAttribute("disabled")
+          document.querySelector(`[data-company-type-of-service="${target}"]`).removeAttribute("disabled")
+          document.querySelector(`[data-contact-person="${target}"]`).removeAttribute("disabled")
+          document.querySelector(`[data-contact-email="${target}"]`).removeAttribute("disabled")
           document.querySelector(`[data-done="${target}"]`).classList.remove('hide')
           document.querySelector(`[data-cancel="${target}"]`).classList.remove('hide')
           document.querySelector(`[data-edit="${target}"]`).classList.add('hide')
@@ -112,8 +122,10 @@ const loadCalTable = async () => {
       done.addEventListener('click', (e) => {
         editFtn(e)
         const target = e.target.getAttribute('data-done')
-        document.querySelector(`[data-param="${target}"]`).setAttribute("disabled","")
-        document.querySelector(`[data-cal-period="${target}"]`).setAttribute("disabled","")
+        document.querySelector(`[data-company-name="${target}"]`).setAttribute("disabled","")
+        document.querySelector(`[data-type-of-service="${target}"]`).setAttribute("disabled","")
+         document.querySelector(`[data-contact-person="${target}"]`).setAttribute("disabled","")
+         document.querySelector(`[data-contact-email="${target}"]`).setAttribute("disabled","")
         document.querySelector(`[data-done="${target}"]`).classList.add('hide')
         document.querySelector(`[data-cancel="${target}"]`).classList.add('hide')
         document.querySelector(`[data-edit="${target}"]`).classList.remove('hide')
@@ -122,8 +134,10 @@ const loadCalTable = async () => {
     document.querySelectorAll('[data-cancel]')?.forEach(cancel => {
       cancel.addEventListener('click', (e) => {
         const target = e.target.getAttribute('data-cancel')
-        document.querySelector(`[data-param="${target}"]`).setAttribute("disabled","")
-        document.querySelector(`[data-cal-period="${target}"]`).setAttribute("disabled","")
+        document.querySelector(`[data-company-name="${target}"]`).setAttribute("disabled","")
+        document.querySelector(`[data-type-of-service="${target}"]`).setAttribute("disabled","")
+         document.querySelector(`[data-contact-person="${target}"]`).setAttribute("disabled","")
+         document.querySelector(`[data-contact-email="${target}"]`).setAttribute("disabled","")
         document.querySelector(`[data-done="${target}"]`).classList.add('hide')
         document.querySelector(`[data-cancel="${target}"]`).classList.add('hide')
         document.querySelector(`[data-edit="${target}"]`).classList.remove('hide')
@@ -133,7 +147,7 @@ const loadCalTable = async () => {
       page.addEventListener('click',async e => {
         const page = e.target.getAttribute('data-page')
         current_page = page
-        loadCalTable()
+        loadSupplierTable()
       })
     })
 
@@ -152,26 +166,30 @@ const loadCalTable = async () => {
 }
 
 const delFtn = async (e) => {
-  await fetch(`/cal_period_list${e.target.getAttribute('data-delete')}`, {
+  await fetch(`/supplier_list${e.target.getAttribute('data-delete')}`, {
     method: 'DELETE'
   })
-  loadCalTable()
+  loadSupplierTable()
 }
 
 const editFtn = async (e) => {
   const currentTarget = e.target.getAttribute('data-done')
   
-  const parameter = document.querySelector(`[data-param="${currentTarget}"]`).value
-  const cal_period = document.querySelector(`[data-cal-period="${currentTarget}"]`).value
-  await fetch(`/cal_period_list${e.target.getAttribute('data-done')}`, {
+  const company_name = document.querySelector(`[data-company-name="${currentTarget}"]`).value
+  const type_of_service = document.querySelector(`[data-type-of-service="${currentTarget}"]`).value
+  const contact_person = document.querySelector(`[data-contact-person="${currentTarget}"]`).value
+  const contact_email = document.querySelector(`[data-contact-email="${currentTarget}"]`).value
+  await fetch(`/supplier_list${e.target.getAttribute('data-done')}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       id:currentTarget,
-      parameter: parameter,
-      cal_period: cal_period
+      company_name: company_name,
+      type_of_service: type_of_service,
+      contact_person: contact_person,
+      contact_email: contact_email
     })
   })
 }
@@ -180,7 +198,7 @@ document.querySelector('#each_page_show')?.addEventListener('input', () => {
   each_page_show = Number(document.querySelector('#each_page_show').value)
   document.querySelector('#each_page_show').blur()
   console.log(each_page_show)
-  loadCalTable()
+  loadSupplierTable()
 })
 
 const check_page_status = (data) => {
@@ -205,7 +223,7 @@ document.querySelector('#search_item')?.addEventListener('input', () => {
   } else {
     document.querySelector('#search_btn').setAttribute('disabled','')
     sort_by = ''
-    loadCalTable()
+    loadSupplierTable()
   }
 })
 
@@ -214,13 +232,13 @@ document.querySelector('#search_btn')?.addEventListener('click', () => {
   let search_item = document.querySelector('#search_item').value
   sort_by_item = search_select
   sort_by = search_item.toLowerCase()
-  loadCalTable()
+  loadSupplierTable()
   document.querySelector('#search_select').value = sort_by_item
 })
 
 document.querySelectorAll('[data-th]').forEach(title => {
   let path = window.location.pathname
-  if (path === '/cal_period') {
+  if (path === '/supplier') {
     title.addEventListener('click',(e) => {
       e.stopPropagation()
       document.querySelector(`[data-arrow=${order_by}]`).textContent = ''
@@ -232,8 +250,8 @@ document.querySelectorAll('[data-th]').forEach(title => {
         order_by_ascending = !order_by_ascending
         order_by_ascending?document.querySelector(`[data-arrow=${order_by}]`).textContent = 'arrow_downward':document.querySelector(`[data-arrow=${order_by}]`).textContent = 'arrow_upward'
       }
-      loadCalTable()
+      loadSupplierTable()
     })
   }
 })
-export { loadCalTable }
+export { loadSupplierTable }

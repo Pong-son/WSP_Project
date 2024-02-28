@@ -1,7 +1,12 @@
+import './jscomponant/navbar.js'
 import './jscomponant/login.js'
 import { checkLogin, loginName } from './jscomponant/login.js'
 import './jscomponant/cal_period.js'
 import { loadCalTable } from './jscomponant/cal_period.js'
+import './jscomponant/supplier.js'
+import { loadSupplierTable } from './jscomponant/supplier.js'
+import './jscomponant/rm.js'
+import { loadRMTable } from './jscomponant/rm.js'
 
 const socket = io.connect();
 
@@ -117,8 +122,13 @@ socket.on("new-memo",(data)=>{
 window.onload = () => {
 	checkLogin()
 	let path = window.location.pathname
-	// // loadMemos()
 	if(path === '/cal_period') {
 		loadCalTable()
+	}
+	if (path === '/supplier') {
+		loadSupplierTable()
+	}
+	if (path === '/rm') {
+		loadRMTable()
 	}
 }

@@ -1,7 +1,7 @@
 import { getData } from './get_data.js'
 import { pagination } from './pagination.js'
 
-let cal_period_table = document.querySelector('#cal_period_table')
+let rm_table = document.querySelector('#rm_table')
 // fixed variable
 let each_page_show = Number(document.querySelector('#each_page_show')?.value);
 let current_page = 1;
@@ -14,34 +14,37 @@ let data_in_table = [];
 
 // add new data
 document
-	.querySelector('#calPeriodForm')
+	.querySelector('#rMForm')
 	?.addEventListener('submit', async (event) => {
 		event.preventDefault() // To prevent the form from submitting synchronously
 		const form = event.target
-		let parameter = form.parameter.value
-		let calPeriod = form.calPeriod.value
+		let chemical_name = form.chemical_name.value
+		let is_crm = form.is_crm.value
+		let expiry_date = form.expiry_date.value
 
-		const res = await fetch('/cal_period_list', {
+		const res = await fetch('/rm_list', {
       method: 'POST',
 			headers: {
         'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-        parameter: parameter,
-				cal_period: calPeriod
+        chemical_name: chemical_name,
+				is_crm: is_crm,
+        expiry_date: expiry_date
 			})
 		})
 		const result = await res.json()
 
-		document.querySelector('#parameter').value = ''
-		document.querySelector('#calPeriod').value = ''
+		document.querySelector('#chemical_name').value = ''
+		document.querySelector('#is_crm').value = ''
+		document.querySelector('#expiry_date').value = ''
 
-  loadCalTable()
+  loadRMTable()
 	});
 
-const loadCalTable = async () => {
+const loadRMTable = async () => {
   try {
-    data = await getData(`cal_period_list?page=${current_page}&limit=${each_page_show}&order_by=${order_by}&order_by_ascending=${order_by_ascending}&sort_by_item=${sort_by_item}&sort_by=${sort_by}`)
+    data = await getData(`rm_list?page=${current_page}&limit=${each_page_show}&order_by=${order_by}&order_by_ascending=${order_by_ascending}&sort_by_item=${sort_by_item}&sort_by=${sort_by}`)
 
     let start = (current_page - 1) * each_page_show
     let end = start + each_page_show
@@ -53,22 +56,23 @@ const loadCalTable = async () => {
     
     document.querySelector('[data-pre]')?.addEventListener('click',() => {
       current_page = current_page - 1
-      loadCalTable()
+      loadRMTable()
     })
     document.querySelector('[aria-label="Next"]')?.addEventListener('click',() => {
       current_page = current_page + 1
-      loadCalTable()
+      loadRMTable()
     })
     // generate table
     if(data.length === 0) {
-      cal_period_table.innerHTML = ''
-      cal_period_table.innerHTML = '<tr><th>No DATA</th></tr>'
+      rm_table.innerHTML = ''
+      rm_table.innerHTML = '<tr><th>No DATA</th></tr>'
     } else {
-      cal_period_table.innerHTML = ''
+      rm_table.innerHTML = ''
       data_in_table.forEach( item => {
-        cal_period_table.innerHTML += `<tr id=${item.id}><th scope="row">${item.id}</th>
-        <td><input disabled type='text' data-param="${item.id}" value=${item.parameter}></td>
-        <td><input disabled type='text' data-cal-period="${item.id}" value=${item.cal_period}></td>
+        rm_table.innerHTML += `<tr id=${item.id}><th scope="row">${item.id}</th>
+        <td><input disabled type='text' data-chemical-name="${item.id}" value=${item.chemical_name}></td>
+        <td><input disabled type='text' data-is-crm="${item.id}" value=${item.is_crm}></td>
+        <td><input disabled type='text' data-expiry-date="${item.id}" value=${item.expiry_date}></td>
         <td>
         <button data-edit="${item.id}">Edit</button>
         <button data-done="${item.id}" class="hide">Done</button>
@@ -85,8 +89,9 @@ const loadCalTable = async () => {
       if (window.sessionStorage.getItem('admin')) {
         edit.addEventListener('click', (e) => {
           const target = e.target.getAttribute('data-edit')
-          document.querySelector(`[data-param="${target}"]`).removeAttribute("disabled")
-          document.querySelector(`[data-cal-period="${target}"]`).removeAttribute("disabled")
+          document.querySelector(`[data-chemical-name="${target}"]`).removeAttribute("disabled")
+          document.querySelector(`[data-is-crm="${target}"]`).removeAttribute("disabled")
+          document.querySelector(`[data-expiry-date="${target}"]`).removeAttribute("disabled")
           document.querySelector(`[data-done="${target}"]`).classList.remove('hide')
           document.querySelector(`[data-cancel="${target}"]`).classList.remove('hide')
           document.querySelector(`[data-edit="${target}"]`).classList.add('hide')
@@ -112,8 +117,9 @@ const loadCalTable = async () => {
       done.addEventListener('click', (e) => {
         editFtn(e)
         const target = e.target.getAttribute('data-done')
-        document.querySelector(`[data-param="${target}"]`).setAttribute("disabled","")
-        document.querySelector(`[data-cal-period="${target}"]`).setAttribute("disabled","")
+        document.querySelector(`[data-chemical-name="${target}"]`).setAttribute("disabled","")
+        document.querySelector(`[data-is-crm="${target}"]`).setAttribute("disabled","")
+        document.querySelector(`[data-expiry-date="${target}"]`).setAttribute("disabled","")
         document.querySelector(`[data-done="${target}"]`).classList.add('hide')
         document.querySelector(`[data-cancel="${target}"]`).classList.add('hide')
         document.querySelector(`[data-edit="${target}"]`).classList.remove('hide')
@@ -122,8 +128,9 @@ const loadCalTable = async () => {
     document.querySelectorAll('[data-cancel]')?.forEach(cancel => {
       cancel.addEventListener('click', (e) => {
         const target = e.target.getAttribute('data-cancel')
-        document.querySelector(`[data-param="${target}"]`).setAttribute("disabled","")
-        document.querySelector(`[data-cal-period="${target}"]`).setAttribute("disabled","")
+        document.querySelector(`[data-chemical-name="${target}"]`).setAttribute("disabled","")
+        document.querySelector(`[data-is-crm="${target}"]`).setAttribute("disabled","")
+        document.querySelector(`[data-expiry-date="${target}"]`).setAttribute("disabled","")
         document.querySelector(`[data-done="${target}"]`).classList.add('hide')
         document.querySelector(`[data-cancel="${target}"]`).classList.add('hide')
         document.querySelector(`[data-edit="${target}"]`).classList.remove('hide')
@@ -133,7 +140,7 @@ const loadCalTable = async () => {
       page.addEventListener('click',async e => {
         const page = e.target.getAttribute('data-page')
         current_page = page
-        loadCalTable()
+        loadRMTable()
       })
     })
 
@@ -152,26 +159,28 @@ const loadCalTable = async () => {
 }
 
 const delFtn = async (e) => {
-  await fetch(`/cal_period_list${e.target.getAttribute('data-delete')}`, {
+  await fetch(`/rm_list${e.target.getAttribute('data-delete')}`, {
     method: 'DELETE'
   })
-  loadCalTable()
+  loadRMTable()
 }
 
 const editFtn = async (e) => {
   const currentTarget = e.target.getAttribute('data-done')
-  
-  const parameter = document.querySelector(`[data-param="${currentTarget}"]`).value
-  const cal_period = document.querySelector(`[data-cal-period="${currentTarget}"]`).value
-  await fetch(`/cal_period_list${e.target.getAttribute('data-done')}`, {
+
+  const chemical_name = document.querySelector(`[data-chemical-name="${currentTarget}"]`).value
+  const is_crm = document.querySelector(`[data-is-crm="${currentTarget}"]`).value
+  const expiry_date = document.querySelector(`[data-expiry-date="${currentTarget}"]`).value
+  await fetch(`/rm_list${e.target.getAttribute('data-done')}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       id:currentTarget,
-      parameter: parameter,
-      cal_period: cal_period
+      chemical_name: chemical_name,
+      is_crm: is_crm,
+      expiry_date: expiry_date
     })
   })
 }
@@ -180,7 +189,7 @@ document.querySelector('#each_page_show')?.addEventListener('input', () => {
   each_page_show = Number(document.querySelector('#each_page_show').value)
   document.querySelector('#each_page_show').blur()
   console.log(each_page_show)
-  loadCalTable()
+  loadRMTable()
 })
 
 const check_page_status = (data) => {
@@ -205,7 +214,7 @@ document.querySelector('#search_item')?.addEventListener('input', () => {
   } else {
     document.querySelector('#search_btn').setAttribute('disabled','')
     sort_by = ''
-    loadCalTable()
+    loadRMTable()
   }
 })
 
@@ -214,13 +223,13 @@ document.querySelector('#search_btn')?.addEventListener('click', () => {
   let search_item = document.querySelector('#search_item').value
   sort_by_item = search_select
   sort_by = search_item.toLowerCase()
-  loadCalTable()
+  loadRMTable()
   document.querySelector('#search_select').value = sort_by_item
 })
 
 document.querySelectorAll('[data-th]').forEach(title => {
   let path = window.location.pathname
-  if (path === '/cal_period') {
+  if (path === '/rm') {
     title.addEventListener('click',(e) => {
       e.stopPropagation()
       document.querySelector(`[data-arrow=${order_by}]`).textContent = ''
@@ -232,8 +241,8 @@ document.querySelectorAll('[data-th]').forEach(title => {
         order_by_ascending = !order_by_ascending
         order_by_ascending?document.querySelector(`[data-arrow=${order_by}]`).textContent = 'arrow_downward':document.querySelector(`[data-arrow=${order_by}]`).textContent = 'arrow_upward'
       }
-      loadCalTable()
+      loadRMTable()
     })
   }
 })
-export { loadCalTable }
+export { loadRMTable }

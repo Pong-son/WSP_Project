@@ -10,6 +10,8 @@ import { logoutRoutes } from './routes/logoutRoute';
 import { registerRoutes } from './routes/registerRoute';
 import { equipmentRoutes } from './routes/equipmentRoute';
 import { calPeriodRoutes } from './routes/calPeriodRoutes';
+import { supplierListRoutes } from './routes/supplierListRoutes';
+import { rMRoutes } from './routes/rMRoutes';
 import { Client } from 'pg';
 import dotenv from 'dotenv';
 import {Server as SocketIO} from 'socket.io';
@@ -79,6 +81,10 @@ app.use('/', equipmentRoutes)
 
 app.use('/', calPeriodRoutes)
 
+app.use('/', supplierListRoutes)
+
+app.use('/', rMRoutes)
+
 app.use('/', memoRoutes)
 
 app.get('/', function (req: Request, res: Response) {
@@ -114,6 +120,14 @@ app.get('/equipment', (req: Request, res: Response) => {
 
 app.get('/cal_period', (req: Request, res: Response) => {
 	res.sendFile(path.resolve('public/protected', 'cal_period.html'))
+})
+
+app.get('/supplier', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'supplier.html'))
+})
+
+app.get('/rm', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'rm.html'))
 })
 
 // app.get('/admin', (req: Request, res: Response) => {

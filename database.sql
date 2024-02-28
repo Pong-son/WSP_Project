@@ -8,6 +8,15 @@ CREATE TABLE users (
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
+CREATE TABLE supplier_list (
+  id SERIAL primary key,
+  company_name TEXT,
+  type_of_service TEXT,
+  contact_person TEXT,
+  contact_email TEXT,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
 CREATE TABLE order_list (
   id SERIAL primary key,
   supplier_id INT,
@@ -21,20 +30,17 @@ CREATE TABLE order_list (
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
-CREATE TABLE supplier_list (
-  id SERIAL primary key,
-  company_name TEXT,
-  type_of_service TEXT,
-  contact_person TEXT,
-  contact_email TEXT,
-  created_at TIMESTAMP,
-  updated_at TIMESTAMP
-);
 CREATE TABLE sample_info (
   id SERIAL primary key,
   sample_receive_date TIMESTAMP,
   analysis_date TIMESTAMP,
   batch_no INT,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+CREATE TABLE testing_item (
+  id SERIAL primary key,
+  name TEXT,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
@@ -45,9 +51,10 @@ CREATE TABLE testing_info (
   testing_item_id INT,
   FOREIGN KEY (testing_item_id) REFERENCES testing_item(id)
 );
-CREATE TABLE testing_item (
+CREATE TABLE cal_period (
   id SERIAL primary key,
-  name TEXT,
+  parameter TEXT,
+  cal_period INT,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
@@ -63,13 +70,6 @@ CREATE TABLE equipment (
   updated_at TIMESTAMP,
   FOREIGN KEY (cal_period_id) REFERENCES cal_period(id)
 );
-CREATE TABLE cal_period (
-  id SERIAL primary key,
-  parameter TEXT,
-  cal_period INT,
-  created_at TIMESTAMP,
-  updated_at TIMESTAMP
-);
 CREATE TABLE equipment_testing_info (
   id SERIAL primary key,
   equipment_id INT,
@@ -77,12 +77,13 @@ CREATE TABLE equipment_testing_info (
   testing_info_id INT,
   FOREIGN KEY (testing_info_id) REFERENCES testing_info(id)
 );
-CREATE TABLE reagent_sample_info (
+CREATE TABLE rm_list(
   id SERIAL primary key,
-  batch_id INT,
-  FOREIGN KEY (batch_id) REFERENCES sample_info(id),
-  reagent_id INT,
-  FOREIGN KEY (reagent_id) REFERENCES reagent_list(id)
+  chemical_name TEXT,
+  is_crm BOOLEAN,
+  expiry_date TIMESTAMP,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
 );
 CREATE TABLE reagent_list(
   id SERIAL primary key,
@@ -98,11 +99,10 @@ CREATE TABLE reagent_list(
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
-CREATE TABLE rm_list(
+CREATE TABLE reagent_sample_info (
   id SERIAL primary key,
-  chemical_name TEXT,
-  is_crm BOOLEAN,
-  expiry_date TIMESTAMP,
-  created_at TIMESTAMP,
-  updated_at TIMESTAMP
+  batch_id INT,
+  FOREIGN KEY (batch_id) REFERENCES sample_info(id),
+  reagent_id INT,
+  FOREIGN KEY (reagent_id) REFERENCES reagent_list(id)
 );
