@@ -38,13 +38,26 @@ const getCalPeriod = async (req: express.Request, res: express.Response) => {
 		if (sort_by) {
 			calPeriodList = await client.query('select * from cal_period')
 			await calPeriodList.rows?.forEach((item:any) => {
-				if (item[`${sort_by_item}`]?.toLowerCase() === req.query.sort_by) {
-					sort_by = item[`${sort_by_item}`]
+				console.log(typeof item[`${sort_by_item}`])
+				if (typeof item[`${sort_by_item}`] === 'number') {
+					if(item[`${sort_by_item}`] === Number(req.query.sort_by)) {
+						sort_by = item[`${sort_by_item}`]
+					}
+				} else if (typeof item[`${sort_by_item}`] === 'string') {
+					if(item[`${sort_by_item}`].toLowerCase() === req.query.sort_by) {
+						sort_by = item[`${sort_by_item}`]
+					}
 				}
 			});
-			calPeriodList = await client.query(
-				`select * from cal_period WHERE ${sort_by_item} like '%${sort_by}%' ORDER BY ${order_by} ${order_by_ascending}`
-			)
+			if(typeof sort_by === 'string'){
+				calPeriodList = await client.query(
+					`select * from cal_period WHERE ${sort_by_item} like '%${sort_by}%' ORDER BY ${order_by} ${order_by_ascending}`
+				)
+			} else {
+				calPeriodList = await client.query(
+					`select * from cal_period WHERE ${sort_by_item} = ${sort_by} ORDER BY ${order_by} ${order_by_ascending}`
+				)
+			}
 		} else {
 			calPeriodList = await client.query(
 				`select * from cal_period ORDER BY ${order_by} ${order_by_ascending}`

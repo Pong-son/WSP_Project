@@ -41,7 +41,7 @@ document
 const loadCalTable = async () => {
   try {
     data = await getData(`cal_period_list?page=${current_page}&limit=${each_page_show}&order_by=${order_by}&order_by_ascending=${order_by_ascending}&sort_by_item=${sort_by_item}&sort_by=${sort_by}`)
-    console.log(data)
+
     let start = (current_page - 1) * each_page_show
     let end = start + each_page_show
     
@@ -208,29 +208,36 @@ document.querySelector('#search_item')?.addEventListener('input', () => {
   }
 })
 
-
 document.querySelector('#search_btn')?.addEventListener('click', () => {
   let search_select = document.querySelector('#search_select').value
   let search_item = document.querySelector('#search_item').value
   sort_by_item = search_select
   sort_by = search_item.toLowerCase()
   loadCalTable()
+  document.querySelector('#search_select').value = sort_by_item
 })
 
 document.querySelectorAll('[data-th]').forEach(title => {
   title.addEventListener('click',(e) => {
-    if(order_by !== e.target.textContent) {
+    e.stopPropagation()
+    document.querySelector(`[data-arrow=${order_by}]`).textContent = ''
+    if (order_by !== e.target.getAttribute('data-th')) {
+      order_by = e.target.getAttribute('data-th')
       order_by_ascending = true
+      document.querySelector(`[data-arrow=${order_by}]`).textContent = 'arrow_downward'
     } else {
       order_by_ascending = !order_by_ascending
-    }
-    if(e.target.textContent === 'Calibration Period (in Month)') {
-      order_by = 'cal_period'
-    } else {
-      order_by = e.target.textContent
+      order_by_ascending?document.querySelector(`[data-arrow=${order_by}]`).textContent = 'arrow_downward':document.querySelector(`[data-arrow=${order_by}]`).textContent = 'arrow_upward'
     }
     console.log(order_by,order_by_ascending)
     loadCalTable()
   })
 })
 export { loadCalTable }
+
+{/* <span class="material-symbols-outlined">
+arrow_upward
+</span>
+<span class="material-symbols-outlined">
+arrow_downward
+</span> */}

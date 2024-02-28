@@ -11,19 +11,19 @@ const postLogin =  async (req: express.Request, res: express.Response) => {
 			[req.body.username]
 		)
 		// need to revise! After Admin page created!
-		if (user.rows[0].username === 'Admin') {
-			if(user.rows[0].password === 'Admin') {
-				req.session.user = user.rows[0].username
-				req.session.userId = user.rows[0].id
-			}
-		} else {
+		// if (user.rows[0].username === 'Admin') {
+		// 	if(user.rows[0].password === 'Admin') {
+		// 		req.session.user = user.rows[0].username
+		// 		req.session.userId = user.rows[0].id
+		// 	}
+		// } else {
 			let matchpw = await checkPassword({plainPassword: req.body.password,hashedPassword: user.rows[0].password})
 			
 			if(matchpw){
 				req.session.user = user.rows[0].username
 				req.session.userId = user.rows[0].id
 			}
-		}
+		// }
 		
 		if (!req.session.user) {
 			res.json('fail')
