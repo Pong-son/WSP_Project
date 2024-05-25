@@ -1,10 +1,7 @@
 import express from 'express';
-// import { parse } from '../utils';
-// import formidable from 'formidable';
 import { client } from '../index';
 import { User } from '../module';
 import { hashPassword } from '../hash'
-// import { io } from '../index';
 
 const registerRoutes = express.Router()
 
@@ -29,8 +26,8 @@ const postRegister = async (req: express.Request, res: express.Response) => {
 			}
 			
 			await client.query(
-				'INSERT INTO users (username,password,created_at) values ($1,$2,$3)',
-				[newUser.username,newUser.password, new Date()]
+				'INSERT INTO users (username, password, email, is_admin, created_at) values ($1,$2,$3,$4,$5)',
+				[newUser.username,newUser.password, req.body.email, false,  new Date()]
 			)
 			res.json("Success")
 		}

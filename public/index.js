@@ -1,12 +1,19 @@
 import './jscomponant/navbar.js'
 import './jscomponant/login.js'
-import { checkLogin, loginName } from './jscomponant/login.js'
-import './jscomponant/cal_period.js'
-import { loadCalTable } from './jscomponant/cal_period.js'
-import './jscomponant/supplier.js'
-import { loadSupplierTable } from './jscomponant/supplier.js'
-import './jscomponant/rm.js'
-import { loadRMTable } from './jscomponant/rm.js'
+import { checkLogin } from './jscomponant/login.js'
+import './jscomponant/useful_link.js'
+import './jscomponant/notice_board.js'
+import './jscomponant/calibration_period.js'
+import './jscomponant/suppliers.js'
+import './jscomponant/reference_materials.js'
+import './jscomponant/sample_info.js'
+import './jscomponant/testing_item.js'
+import './jscomponant/equipment.js'
+import './jscomponant/orders.js'
+import './jscomponant/reagent.js'
+import './jscomponant/admin.js'
+import { load_table } from './jscomponant/load_table.js'
+import { search_ftn } from './jscomponant/search.js'
 
 const socket = io.connect();
 
@@ -119,16 +126,10 @@ socket.on("new-memo",(data)=>{
 // 	loadMemos()
 // }
 
-window.onload = () => {
+
+
+window.onload = async () => {
 	checkLogin()
-	let path = window.location.pathname
-	if(path === '/cal_period') {
-		loadCalTable()
-	}
-	if (path === '/supplier') {
-		loadSupplierTable()
-	}
-	if (path === '/rm') {
-		loadRMTable()
-	}
+	search_ftn()
+	load_table()
 }

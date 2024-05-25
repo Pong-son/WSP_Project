@@ -40,7 +40,7 @@
     </div>
     <div class="row">
       <div id="page_title">
-        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#equipmentModal">
+        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#testingItemModal">
           Add new item
         </button>
         <div class="d-flex" role="search">
@@ -50,39 +50,23 @@
           <button id="search_btn" class="btn btn-success" disabled>Search</button>
         </div>
       </div>
-      <div class="modal fade" tabindex="-1" id="equipmentModal" aria-labelledby="equipmentModalLabel" aria-hidden="true">
+      <div class="modal fade" tabindex="-1" id="testingItemModal" aria-labelledby="testingItemModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header bg-primary">
-              <h5 class="modal-title text-light" id="equipmentModalLabel">New Equipment</h5>
+              <h5 class="modal-title text-light" id="testingItemModalLabel">New Test Item</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form action="/equipment_list" method="post" id="equipmentForm">
+              <form action="/testing_item_list" method="post" id="testingItemForm">
                 <div class="input-group mb-3">
-                  <label class="input-group-text" for="name">Equipment Name</label>
-                  <input type="text" class="form-control" placeholder="Equipment Name" aria-label="Equipment Name" id="name">
-                </div>
-                <div class="input-group mb-3">
-                  <label class="input-group-text" for="brand">Brand</label>
-                  <input type="text" class="form-control" aria-label="Brand" id="brand">
-                </div>
-                <div class="input-group mb-3">
-                  <label class="input-group-text" for="model">Model</label>
-                  <input type="text" class="form-control" aria-label="Model" id="model">
-                </div>
-                <div class="input-group mb-3">
-                  <label class="input-group-text" for="parameterSelect">Parameter</label>
-                  <select id=parameterSelect class="form-select" aria-label="Default Parameter"></select>
-                </div>
-                <div class="input-group mb-3">
-                  <label class="input-group-text" for="calibration_date">Calibration Date</label>
-                  <input type="date" class="form-control" aria-label="Calibration Date" id="calibration_date">
+                  <label class="input-group-text" for="name">Item Name</label>
+                  <input type="text" class="form-control" aria-label="Name" id="name">
                 </div>
                 <div id="warn_notice" class="text-warning-emphasis"></div>
                 <button type="submit" disabled id="submit_btn" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
                 <button type="reset" id="reset_btn" class="btn btn-primary">Reset</button>
-                </form>
+              </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -94,18 +78,12 @@
         <thead>
           <tr>
             <th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
-            <th scope="col" data-th="name"><span data-th="name">Equipment Name</span><span class="material-symbols-outlined" data-th="name" data-arrow="name"></span></th>
-            <th scope="col" data-th="brand"><span data-th="brand">Brand</span><span class="material-symbols-outlined" data-th="brand" data-arrow="brand"></span></th>
-            <th scope="col" data-th="model"><span data-th="model">Model</span><span class="material-symbols-outlined" data-th="model" data-arrow="model"></span></th>
-            <th scope="col" data-th="parameter"><span data-th="parameter">Parameter</span><span class="material-symbols-outlined" data-th="parameter" data-arrow="parameter"></span></th>
-            <th scope="col" data-th="cal_period"><span data-th="cal_period">Calibration Period</span><span class="material-symbols-outlined" data-th="cal_period" data-arrow="cal_period"></span></th>
-            <th scope="col" data-th="calibration_date"><span data-th="calibration_date">Calibration Date</span><span class="material-symbols-outlined" data-th="calibration_date" data-arrow="calibration_date"></span></th>
-            <th scope="col" data-th="Expiry Date"><span data-th="Expiry Date">Expiry Date</span><span class="material-symbols-outlined" data-th="Expiry Date" data-arrow="Expiry Date"></span></th>
+            <th scope="col" data-th="name"><span data-th="name">Name</span><span class="material-symbols-outlined" data-th="name" data-arrow="name"></span></th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
           </tr>
         </thead>
-        <tbody class="table-group-divider" id="equipment_table">
+        <tbody class="table-group-divider" id="testing_item_table">
         </tbody>
       </table>
       <div class="inline" style="position: relative; bottom: 0px; ">

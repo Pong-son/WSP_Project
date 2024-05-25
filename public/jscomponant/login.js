@@ -1,3 +1,6 @@
+import { getData } from './get_data.js'
+import { navBar } from './navbar.js'
+
 let login;
 let loginName = window.sessionStorage.getItem('username');
 loginName?login = true: login = false;
@@ -5,16 +8,17 @@ loginName?login = true: login = false;
 // let getLoginName = () => {
 // 	return
 // }
-
-document.querySelector('#loginBtn').addEventListener('click', async () => {
-	if(login) {
-		const res = await fetch('/logout')
-		login = false
-		window.sessionStorage.clear()
+const loginBtn = async () => {
+	document.querySelector('#loginBtn')?.addEventListener('click', async () => {
+		if(login) {
+			console.log('test')
+			window.sessionStorage.clear()
+			const res = await fetch('/logout')
+			login = false
+		}
 		checkLogin()
-	}
-})
-
+	})
+}
 
 document
 	.querySelector('#loginForm')
@@ -24,7 +28,6 @@ document
 		let userName = form.userName.value
 		let passWord = form.passWord.value
 
-		console.log(userName,passWord)
 		const res = await fetch('/login', {
 			method: 'POST',
 			headers: {
@@ -36,7 +39,6 @@ document
 			})
 		})
 		const result = await res.json()
-		console.log(result)
 		if (result === 'admin') {
 			window.sessionStorage.setItem('username',userName)
 			window.sessionStorage.setItem('admin','admin')
@@ -48,18 +50,30 @@ document
 		document.querySelector('#userName').value = ''
 		document.querySelector('#passWord').value = ''
 		checkLogin()
+		location.reload()
 	})
 
-const checkLogin = () => {
+const checkLogin = async () => {
+	login = await getData(`isuser`)
+	navBar(login)
   if(login){
 		document.querySelector('#loginBtn').textContent = "Logout"
 		document.querySelector('#loginBtn').removeAttribute('data-bs-toggle')
-		// document.querySelector('#loginForm').classList.add('hide')
+		if (window.sessionStorage.getItem('username') && !window.sessionStorage.getItem('admin')) {
+			document.querySelector('[data-admin]').classList.add('disabled')
+		}
 	} else {
 		document.querySelector('#loginBtn').textContent = "Login"
 		document.querySelector('#loginBtn').setAttribute('data-bs-toggle',"modal")
-		// document.querySelector('#loginForm').classList.remove('hide')
+	}
+	let path = window.location.pathname
+	if(path === '/'  && !login) {
+		let content = `<div style="background-color:black;">
+      Welcome To XXX!
+    </div>`
+    document.querySelector('#home_content').innerHTML = content
 	}
 }
 
-export { checkLogin, loginName }
+
+export { checkLogin, loginName, loginBtn }

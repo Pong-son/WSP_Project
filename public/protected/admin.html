@@ -15,140 +15,136 @@
 	<body>
 		<div id="mainContent" class="container-fluid ">
 			<div id="navBar">
-				<nav class="navbar navbar-expand-lg text-bg-primary">
-					<div class="container-fluid">
-						<a class="navbar-brand" href="/">E & M</a>
-						<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-							<span class="navbar-toggler-icon"></span>
-						</button>
-						<div class="collapse navbar-collapse" id="navbarSupportedContent">
-							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-								<li class="nav-item">
-									<a class="nav-link active" aria-current="page" href="/">Home</a>
-								</li>
-								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-										Chemical
-									</a>
-									<ul class="dropdown-menu">
-										<li><a class="dropdown-item" href="#">Reagent</a></li>
-										<li><a class="dropdown-item" href="#">Reference Material</a></li>
-									</ul>
-								</li>
-								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-										Equipment
-									</a>
-									<ul class="dropdown-menu">
-										<li><a class="dropdown-item" href="/equipment">Equipment List</a></li>
-										<li><a class="dropdown-item" href="#">Calibration Period</a></li>
-									</ul>
-								</li>
-								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-										Service
-									</a>
-									<ul class="dropdown-menu">
-										<li><a class="dropdown-item" href="#">Sample Record</a></li>
-										<li><a class="dropdown-item" href="#">Testing Item</a></li>
-									</ul>
-								</li>
-								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-										Supplier
-									</a>
-									<ul class="dropdown-menu">
-										<li><a class="dropdown-item" href="#">Supplier List</a></li>
-										<li><a class="dropdown-item" href="#">Purchase Order</a></li>
-									</ul>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link disabled" aria-disabled="true">Disabled</a>
-								</li>
-							</ul>
-							<div class="d-flex">
-								<!-- <div id="logoutBtn" class="" ></div> -->
-								<button class="btn btn btn-success" id="loginBtn"></button>
+			</div>
+			<div class="modal fade" tabindex="-1" id="loginModal" aria-labelledby="loginModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header bg-primary">
+							<h5 class="modal-title" id="loginModalLabel">Login</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form action="/login" method="post" id="loginForm">
+								<input type="text" name="userName" id="userName" class="form-control" placeholder="Username" aria-label="username"/>
+								<br />
+								<input type="password" name="passWord" id="passWord"class="form-control" placeholder="Password" aria-label="Password"/>
+								<br />
+								<button type="submit" data-bs-dismiss="modal">Login</button>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div id="page_title">
+					<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#userModal">
+						Add new user
+					</button>
+					<div class="d-flex" role="search">
+						<select id="search_select" class="form-select">
+						</select>
+						<input id="search_item" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" disabled>
+						<button id="search_btn" class="btn btn-success" disabled>Search</button>
+					</div>
+				</div>
+				<!-- form for create new user -->
+				<div class="modal fade" tabindex="-1" id="userModal" aria-labelledby="userModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header bg-primary">
+								<h5 class="modal-title text-light" id="userModalLabel">New User</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<form action="/register" method="post" id="regisForm">
+									<div>New User</div>
+									<div class="input-group mb-3">
+										<label class="input-group-text" for="rUserName">User Name</label>
+										<input type="text" class="form-control" id="rUserName" data_form="rUserName">
+									</div>
+									<div class="input-group mb-3">
+										<label class="input-group-text" for="email">E-mail</label>
+										<input type="text" class="form-control" id="email" data_form="email">
+									</div>
+									<div class="input-group mb-3">
+										<label class="input-group-text" for="rPassWord">Password</label>
+										<input type="password" class="form-control" id="rPassWord" data_form="rPassWord">
+									</div>
+									<div class="input-group mb-3">
+										<label class="input-group-text" for="cfmRPassWord">Confirm Password</label>
+										<input type="password" class="form-control" id="cfmRPassWord">
+									</div>
+									<br />
+									<div id="regWarn"></div>
+									<div id="warn_notice" class="text-warning-emphasis"></div>
+									<button type="submit" disabled id="submit_btn" class="btn btn-primary" data-bs-dismiss="modal">Register</button>
+									<button type="reset" id="reset_btn" class="btn btn-primary">Reset</button>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 							</div>
 						</div>
 					</div>
-				</nav>
-				<!-- <nav id="menu">
-					<div><a href="/">Home</a></div>
-					<div><a href="#">Chemical</a>
-						<div>
-							<div><a href="#">Reagent</a></div>
-							<div><a href="#">Reference Material</a></div>
+				</div>
+				<!-- form for changing password -->
+				<div class="modal fade" tabindex="1" id="changeModal" aria-labelledby="changeModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header bg-primary">
+								<h5 class="modal-title text-light" id="changeModalLabel">Change Password</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<form id="changePwForm">
+									<input class="hide" type="text" id="id_change_pw" value="">
+									<div class="input-group mb-3">
+										<label class="input-group-text" for="newPassword">New Password</label>
+										<input type="password" class="form-control" id="newPassword" data_form="newPassword">
+									</div>
+									<div class="input-group mb-3">
+										<label class="input-group-text" for="cfmNewPassword">Confirm New Password</label>
+										<input type="password" class="form-control" id="cfmNewPassword" data_form="cfmNewPassword">
+									</div>
+									<br />
+									<div id="regWarn_change_pw"></div>
+									<div id="warn_notice_change_pw" class="text-warning-emphasis"></div>
+									<button type="submit" disabled id="submit_btn_change_pw" class="btn btn-primary" data-bs-dismiss="modal">Change</button>
+									<button type="reset" id="reset_btn_change_pw" class="btn btn-primary">Reset</button>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							</div>
 						</div>
 					</div>
-					<div><a href="#">Equipment</a>
-						<div>
-							<div><a href="#">Equipment List</a></div>
-							<div><a href="#">Calibration Period</a></div>
-						</div>
-					</div>
-					<div><a href="#">Service</a>
-						<div>
-							<div><a href="#">Sample Record</a></div>
-							<div><a href="#">Testing Item</a></div>
-						</div>
-					</div>
-					<div><a href="#">Supplier</a>
-						<div>
-							<div><a href="#">Supplier List</a></div>
-							<div><a href="#">Purchase Order</a></div>
-						</div>
-					</div>
-				</nav> -->
-				<form action="/login" class="hide" method="post" id="loginForm">
-					<div>Admin</div>
-					<label for="userName">User Name:</label>
-					<input type="text" name="userName" id="userName" />
-					<br />
-					<label for="passWord">Password:</label>
-					<input type="password" name="passWord" id="passWord" />
-					<br />
-					<button type="submit">Login</button>
-					<div id="toRegForm">Register</div>
-					<div>Login via Google</div>
-				</form>
-				<form action="/register" class="hide" method="post" id="regisForm">
-					<div>Admin</div>
-					<label for="rUserName">User Name:</label>
-					<input type="text" name="rUserName" id="rUserName" />
-					<br />
-					<label for="rPassWord">Password:</label>
-					<input type="password" name="rPassWord" id="rPassWord" />
-					<br />
-					<label for="cfmRPassWord">Confirm Password:</label>
-					<input type="password" name="cfmRPassWord" id="cfmRPassWord" />
-					<br />
-					<div id="regWarn"></div>
-					<button type="submit">Register</button>
-					<div id="toLoginForm">To Login Form</div>
-					<div>Login via Google</div>
-				</form>
-			</div>
-			<div class="row">
-				<h1>You are admin! Log-in Successful.</h1>
-				<form action="../" method="post">
-					<button type="submit">Back to Home page.</button>
-				</form>
-				<div>Add new user</div>
-				<form action="/register" method="post" id="regisForm">
-					<div>Admin</div>
-					<label for="rUserName">User Name:</label>
-					<input type="text" name="rUserName" id="rUserName" />
-					<br />
-					<label for="rPassWord">Password:</label>
-					<input type="password" name="rPassWord" id="rPassWord" />
-					<br />
-					<label for="cfmRPassWord">Confirm Password:</label>
-					<input type="password" name="cfmRPassWord" id="cfmRPassWord" />
-					<br />
-					<div id="regWarn"></div>
-					<button type="submit">Register</button>
-				</form>
+				</div>
+
+				<table class="table table-bordered table-hover table-striped" >
+					<thead>
+						<tr>
+							<th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
+							<th scope="col" data-th="name"><span data-th="name">User Name</span><span class="material-symbols-outlined" data-th="name" data-arrow="name"></span></th>
+							<th scope="col" data-th="email"><span data-th="email">E-mail</span><span class="material-symbols-outlined" data-th="email" data-arrow="email"></span></th>
+							<th scope="col" data-th="is_admin"><span data-th="is_admin">Is_admin</span><span class="material-symbols-outlined" data-th="is_admin" data-arrow="is_admin"></span></th>
+							<th scope="col" data-th="password"><span data-th="password">Change Password</span><span class="material-symbols-outlined" data-th="password" data-arrow="password"></span></th>
+							<th scope="col" data-th="admin"><span data-th="admin">Upgrade to Admin</span><span class="material-symbols-outlined" data-th="admin" data-arrow="admin"></span></th>
+							<th scope="col">Edit</th>
+							<th scope="col">Delete</th>
+						</tr>
+					</thead>
+					<tbody class="table-group-divider" id="users_table"></tbody>
+				</table>
+				<div class="inline" style="position: relative; bottom: 0px; ">
+					<nav aria-label="Page navigation example">
+						<ul class="pagination">
+						</ul>
+					</nav>
+					<input type="number" name="each_page_show" id="each_page_show" value="10" min="1" max="100">
+				</div>
 			</div>
 		</div>
 		<script src="/socket.io/socket.io.js"></script>

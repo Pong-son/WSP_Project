@@ -1,7 +1,11 @@
+* {
+	font-family: "Times New Roman", "Times", "serif";
+}
+
 body {
 	box-sizing: border-box;
 	margin: 0;
-	height: 100vh;
+	height: 100%;
 }
 
 #mainContent {
@@ -11,75 +15,62 @@ body {
 	background-size: cover;
 	background-color: #88D1FC;
 }
+#mainContent_black {
+	position: relative;
+	height: 100vh;
+	background-size: cover;
+	background-color: rgba(0, 0, 0, 0.5);
+	background-image: url(./image/Chem-Lab.jpg);
+	background-blend-mode: multiply;
+}
 
 #page_title {
 	display: flex;
 	justify-content: space-between;
 }
-/* #navBar {
-	display: flex;
-	justify-content: space-between;
-	margin: 0px -12px;
-	padding: 0 25px;
-	height: 75px;
-	font-size: 20px;
-	background-color: rgb(159, 159, 205);
-} */
-/* 
-#loginForm {
-	border: 2px solid black;
-	background-color: wheat;
-	padding: 10px;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	translate: -50% -50%;
-	z-index: 1;
-} */
 
 nav {
 	margin: 0 -12px;
 }
-nav a:hover {
-	background-color: blueviolet;
+nav li:hover {
+	background-color: rgb(136, 144, 43);
 }
 
-.memo {
+#notice_board {
+	background-color: white;
+}
+.notice {
 	position: relative;
-	height: 120px;
-	width: 120px;
+	aspect-ratio: 1/1;
+	width: 90%;
+	/* overflow-y: scroll; */
 	background-color: rgb(220, 220, 87);
 	color: blue;
 	border: 3px;
-	margin: 25px;
+	margin: 7% 0;
 }
 
 .material-symbols-outlined {
 	color: black;
-	font-variation-settings: 'wdth' 1000;
+	/* font-variation-settings: 'wdth' 1000; */
 }
 
-#del {
+[notice-del] {
+	cursor: pointer;
 	position: absolute;
 	font-size: 20px;
-	top: -7%;
-	right: -7%;
+	top: -5%;
+	right: -5%;
 	background-color: white;
 	border-radius: 25px;
 }
-#edit {
+
+[notice-edit] {
+	cursor: pointer;
 	position: absolute;
 	font-size: 20px;
-	bottom: -7%;
-	right: -7%;
-	background-color: white;
-	border-radius: 25px;
-}
-#favorite {
-	position: absolute;
-	font-size: 20px;
-	bottom: -7%;
-	left: -7%;
+	bottom: -5%;
+	right: -5%;
 	background-color: white;
 	border-radius: 25px;
 }
@@ -90,11 +81,12 @@ nav a:hover {
 
 [data-id] {
 	text-align: center;
+	aspect-ratio: 1/1;
+	width: 100%;
 	color: rgb(0, 0, 0);
 	background-color: rgb(220, 220, 87);
+	font-size: 150%;
 	border: 0;
-	height: 120px;
-	width: 120px;
 }
 
 .hide {

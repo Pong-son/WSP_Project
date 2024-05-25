@@ -1,88 +1,106 @@
 import express from 'express';
-import { parse } from '../utils';
-import formidable from 'formidable';
 import { client } from '../index';
-import { io } from '../index';
+import { pagination } from '../pagination'
 
 
 const equipmentRoutes = express.Router()
 
-let counter = 0
-
-const form = formidable({
-	uploadDir: './public/uploads',
-	keepExtensions: true,
-	maxFiles: 1,
-	maxFileSize: 200 * 1024, // the default limit is 200KB
-	filter: (part) => part.mimetype?.startsWith('image/') || false,
-	filename: (originalName, originalExt, part, form) => {
-		let fieldName = part.name
-		let timestamp = Date.now()
-		let ext = part.mimetype?.split('/').pop()
-		counter++
-		return `${fieldName}-${timestamp}-${counter}.${ext}`
-	}
-})
-
-const getEquipments = async (req: express.Request, res: express.Response) => {
+const getEquipment = async (req: express.Request, res: express.Response) => {
 	try {
+		let data: any[]
+		let page: number = req.query.page?Number(req.query.page):1
+		let limit: number = req.query.limit?Number(req.query.limit):10
+		let order_by:string = req.query.order_by?req.query.order_by.toString():'id'
+		let order_by_ascending:string = req.query.order_by_ascending === 'true'?'':'DESC'
+		let sort_by_item = req.query.sort_by_item?req.query.sort_by_item:''
+		let sort_by = req.query.sort_by?req.query.sort_by:''
+
 		let equipmentList:any = []
-		equipmentList = await client.query(
-			'select * from equipment'
-		)
-		if (equipmentList.rows.length === 0) {
-			res.json([])
+		if (sort_by) {
+			equipmentList = await client.query(`SELECT equipment.id, name, brand, model, calibration_period.parameter, calibration_period.calibration_period, calibration_date, expiry_date FROM equipment INNER JOIN calibration_period ON equipment.calibration_period_id = calibration_period.id`)
+			await equipmentList.rows?.forEach((item:any) => {
+				if (typeof item[`${sort_by_item}`] === 'number') {
+					if(item[`${sort_by_item}`] === Number(req.query.sort_by)) {
+						sort_by = item[`${sort_by_item}`]
+					}
+				} else if (typeof item[`${sort_by_item}`] === 'string') {
+					if(item[`${sort_by_item}`].toLowerCase() === req.query.sort_by) {
+						sort_by = item[`${sort_by_item}`]
+					}
+				}
+			});
+			if(typeof sort_by === 'string'){
+				equipmentList = await client.query(
+					`SELECT equipment.id, name, brand, model, calibration_period.parameter, calibration_period.calibration_period, calibration_date, expiry_date FROM equipment INNER JOIN calibration_period ON equipment.calibration_period_id = calibration_period.id WHERE ${sort_by_item} like '%${sort_by}%' ORDER BY ${order_by} ${order_by_ascending}`
+				)
+			} else {
+				equipmentList = await client.query(
+					`SELECT equipment.id, name, brand, model, calibration_period.parameter, calibration_period.calibration_period, calibration_date, expiry_date FROM equipment INNER JOIN calibration_period ON equipment.calibration_period_id = calibration_period.id WHERE ${sort_by_item} = ${sort_by} ORDER BY ${order_by} ${order_by_ascending}`
+				)
+			}
 		} else {
-			res.json(equipmentList.rows)
+			equipmentList = await client.query(
+				`SELECT equipment.id, name, brand, model, calibration_period.parameter, calibration_period.calibration_period, calibration_date, expiry_date FROM equipment INNER JOIN calibration_period ON equipment.calibration_period_id = calibration_period.id ORDER BY ${order_by} ${order_by_ascending}`
+			)
 		}
+		if (equipmentList.rows.length === 0) {
+			data = []
+		} else {
+			data = equipmentList.rows
+		}
+		res.json(pagination(data,page,limit))
 	} catch (err) {
 		console.log(err)
 		res.json([])
 	}
 }
 
-const postEquipments = async (req: express.Request, res: express.Response) => {
-	const { fields, files } = await parse(form, req)
-	fields
+const postEquipment = async (req: express.Request, res: express.Response) => {
 	try {
-		let equipmentList:any = []
-		equipmentList
-		if (files.chooseFile === undefined) {
-			equipmentList = await client.query(
-				'INSERT INTO memos (content) values ($1)',
-					[fields.memoEntry]
+		let calibration_period_data = await client.query(`select * from calibration_period where parameter = $1`,[req.body.parameter])
+		let calibrationPriod = calibration_period_data.rows[0].calibration_period
+		
+		let cal_year = new Date(req.body.calibration_date)
+
+		cal_year.setMonth(cal_year.getMonth()+calibrationPriod)
+		
+		let expiry_date = new Date(cal_year.setDate(cal_year.getDate()-1))
+
+		await client.query(
+			'INSERT INTO equipment (name, brand, model, calibration_period_id, calibration_date, expiry_date, created_at) values ($1,$2,$3,$4,$5,$6,$7)',
+			[req.body.name,req.body.brand,req.body.model,calibration_period_data.rows[0].id,req.body.calibration_date, expiry_date,new Date]
 			)
-		} else {
-			equipmentList = await client.query(
-				'INSERT INTO memos (content,image) values ($1,$2)',
-					[fields.memoEntry,(files.chooseFile as formidable.File).newFilename]
-			)
-		}
-		io.emit("new-memo","Congratulations! New Memo Created!");
 	} catch (err) {
 		console.log(err)
 	}
 	res.json({updated:1})
 }
 
-const delEquipments = async (req: express.Request, res: express.Response) => {
+const delEquipment = async (req: express.Request, res: express.Response) => {
 	try {
 		await client.query(
-			`delete from memos where id = ${req.params.id}`
+			`delete from equipment where id = ${req.params.id}`
 		)
 	} catch (err) {
 		console.log(err)
 	}
-	// res.redirect('/')
 	res.json('Deleted')
 }
 
-const putEquipments = async (req: express.Request, res: express.Response) => {
-	console.log(req.body.content,Number(req.body.id))
+const putEquipment = async (req: express.Request, res: express.Response) => {
 	try {
+		let calibration_period_data = await client.query(`select * from calibration_period where parameter = $1`,[req.body.parameter])
+		let calibrationPriod = calibration_period_data.rows[0].calibration_period
+		
+		let cal_year = new Date(req.body.calibration_date)
+
+		cal_year.setMonth(cal_year.getMonth()+calibrationPriod)
+		
+		let expiry_date = new Date(cal_year.setDate(cal_year.getDate()-1))
+
 		await client.query(
-			'update memos set content = $1 where id = $2',
-			[req.body.content,Number(req.body.id)]
+			'update equipment set name = $1, brand = $2, model = $3, calibration_period_id = $4, calibration_date = $5, expiry_date = $6, updated_at = $7 where id = $8',
+			[req.body.name,req.body.brand,req.body.model,calibration_period_data.rows[0].id,req.body.calibration_date,expiry_date,new Date, req.body.id]
 		)
 	} catch (err) {
 		console.log(err)
@@ -92,9 +110,9 @@ const putEquipments = async (req: express.Request, res: express.Response) => {
 
 
 
-equipmentRoutes.get('/equipmentlist', getEquipments)
-equipmentRoutes.post('/equipmentlist', postEquipments)
-equipmentRoutes.delete('/equipmentlist:id', delEquipments)
-equipmentRoutes.put('/equipmentlist:id', putEquipments)
+equipmentRoutes.get('/equipment_list', getEquipment)
+equipmentRoutes.post('/equipment_list', postEquipment)
+equipmentRoutes.delete('/equipment_list:id', delEquipment)
+equipmentRoutes.put('/equipment_list:id', putEquipment)
 
-export { equipmentRoutes, getEquipments, postEquipments, delEquipments, putEquipments }
+export { equipmentRoutes, getEquipment, postEquipment, delEquipment, putEquipment }

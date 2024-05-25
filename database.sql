@@ -1,4 +1,12 @@
 Database lab_system;
+CREATE TABLE useful_link (
+  id SERIAL primary key,
+  title TEXT,
+  used_for TEXT,
+  link TEXT,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
 CREATE TABLE users (
   id SERIAL primary key,
   username TEXT,
@@ -8,7 +16,7 @@ CREATE TABLE users (
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
-CREATE TABLE supplier_list (
+CREATE TABLE suppliers (
   id SERIAL primary key,
   company_name TEXT,
   type_of_service TEXT,
@@ -17,24 +25,16 @@ CREATE TABLE supplier_list (
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
-CREATE TABLE order_list (
+CREATE TABLE orders (
   id SERIAL primary key,
   supplier_id INT,
-  FOREIGN KEY (supplier_id) REFERENCES supplier_list(id),
+  FOREIGN KEY (supplier_id) REFERENCES supplier(id),
   order_no INT,
   product TEXT,
   price INT,
-  order_confirm_date DATE,
+  confirm_date DATE,
   user_id INT,
   FOREIGN KEY (user_id) REFERENCES users(id),
-  created_at TIMESTAMP,
-  updated_at TIMESTAMP
-);
-CREATE TABLE sample_info (
-  id SERIAL primary key,
-  sample_receive_date TIMESTAMP,
-  analysis_date TIMESTAMP,
-  batch_no INT,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
@@ -44,17 +44,27 @@ CREATE TABLE testing_item (
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
+CREATE TABLE sample_info (
+  id SERIAL primary key,
+  sample_receive_date TIMESTAMP,
+  analysis_date TIMESTAMP,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
 CREATE TABLE testing_info (
   id SERIAL primary key,
   sample_info_id INT,
   FOREIGN KEY (sample_info_id) REFERENCES sample_info(id),
   testing_item_id INT,
-  FOREIGN KEY (testing_item_id) REFERENCES testing_item(id)
+  FOREIGN KEY (testing_item_id) REFERENCES testing_item(id),
+  batch_id INT,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
 );
-CREATE TABLE cal_period (
+CREATE TABLE calibration_period (
   id SERIAL primary key,
   parameter TEXT,
-  cal_period INT,
+  calibration_period INT,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
@@ -63,46 +73,49 @@ CREATE TABLE equipment (
   name TEXT,
   brand TEXT,
   model TEXT,
-  cal_period_id INT,
+  calibration_period_id INT,
   calibration_date TIMESTAMP,
   expiry_date DATE,
   created_at TIMESTAMP,
   updated_at TIMESTAMP,
-  FOREIGN KEY (cal_period_id) REFERENCES cal_period(id)
+  FOREIGN KEY (calibration_period_id) REFERENCES calibration_period(id)
 );
-CREATE TABLE equipment_testing_info (
-  id SERIAL primary key,
-  equipment_id INT,
-  FOREIGN KEY (equipment_id) REFERENCES equipment(id),
-  testing_info_id INT,
-  FOREIGN KEY (testing_info_id) REFERENCES testing_info(id)
-);
-CREATE TABLE rm_list(
+CREATE TABLE reference_materials(
   id SERIAL primary key,
   chemical_name TEXT,
-  is_crm BOOLEAN,
-  expiry_date TIMESTAMP,
+  is_certified BOOLEAN,
+  expiry_date DATE,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
-CREATE TABLE reagent_list(
+CREATE TABLE reagent(
   id SERIAL primary key,
   name TEXT,
   testing_item_id INT,
   FOREIGN KEY (testing_item_id) REFERENCES testing_item(id),
-  rm_id INT,
-  FOREIGN KEY (rm_id) REFERENCES rm_list(id),
+  reference_materials_id INT,
+  FOREIGN KEY (reference_materials_id) REFERENCES reference_materials(id),
   prepare_date TIMESTAMP,
   expiry_date DATE,
-  prepared_by INT,
-  FOREIGN KEY (prepared_by) REFERENCES users(id),
+  prepared_by TEXT,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
 CREATE TABLE reagent_sample_info (
   id SERIAL primary key,
-  batch_id INT,
-  FOREIGN KEY (batch_id) REFERENCES sample_info(id),
+  testing_info_id INT,
+  FOREIGN KEY (testing_info_id) REFERENCES testing_info(batch_id),
   reagent_id INT,
-  FOREIGN KEY (reagent_id) REFERENCES reagent_list(id)
+  FOREIGN KEY (reagent_id) REFERENCES reagent(id)
+);
+CREATE TABLE notices (
+  id SERIAL primary key,
+  topic TEXT,
+  content TEXT,
+  equipment_id INT,
+  reference_materials_id INT,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP,
+  FOREIGN KEY (equipment_id) REFERENCES equipment(id),
+  FOREIGN KEY (reference_materials_id) REFERENCES reference_materials(id)
 );

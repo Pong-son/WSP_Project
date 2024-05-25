@@ -14,8 +14,7 @@
 </head>
 <body>
   <div id="mainContent" class="container-fluid ">
-    <div id="navBar">
-    </div>
+    <div id="navBar"></div>
     <div class="modal fade" tabindex="-1" id="loginModal" aria-labelledby="loginModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -40,7 +39,7 @@
     </div>
     <div class="row">
       <div id="page_title">
-        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#rMModal">
+        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#supplierListModal">
           Add new item
         </button>
         <div class="d-flex" role="search">
@@ -50,27 +49,38 @@
           <button id="search_btn" class="btn btn-success" disabled>Search</button>
         </div>
       </div>
-      <div class="modal fade" tabindex="-1" id="rMModal" aria-labelledby="rMModalLabel" aria-hidden="true">
+      <div class="modal fade" tabindex="-1" id="supplierListModal" aria-labelledby="supplierListModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header bg-primary">
-              <h5 class="modal-title" id="rMModalLabel">New Reference Material</h5>
+              <h5 class="modal-title text-light" id="supplierListModalLabel">New Supplier</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form action="/rm_list" method="post" id="rMForm">
-                <input type="text" class="form-control" placeholder="Chemical Name" aria-label="Chemical Name" id="chemical_name">
-                <select id="is_crm" class="form-select" aria-label="Default true">
-                  <option selected>Open this select menu</option>
-                  <option value="true">true</option>
-                  <option value="false">false</option>
-                </select>
-                <input type="date" class="form-control" placeholder="expiry date" aria-label="expiry date" id="expiry_date">
-                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+              <form action="/supplier_list" method="post" id="supplierListForm">
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="company_name">Company Name</label>
+                  <input type="text" class="form-control" aria-label="Company Name" id="company_name">
+                </div>
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="type_of_service">Type of service</label>
+                  <input type="text" class="form-control" aria-label="Type of service" id="type_of_service">
+                </div>
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="contact_person">Contact Person</label>
+                  <input type="text" class="form-control" aria-label="Contact Person" id="contact_person">
+                </div>
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="contact_email">Contact email</label>
+                  <input type="text" class="form-control" aria-label="Contact email" id="contact_email">
+                </div>
+                <div id="warn_notice" class="text-warning-emphasis"></div>
+                <button type="submit" disabled id="submit_btn" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+                <button type="reset" id="reset_btn" class="btn btn-primary">Reset</button>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button " class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
@@ -79,14 +89,15 @@
         <thead>
           <tr>
             <th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
-            <th scope="col" data-th="chemical_name"><span data-th="chemical_name">Chemical Name</span><span class="material-symbols-outlined" data-th="chemical_name" data-arrow="chemical_name"></span></th>
-            <th scope="col" data-th="is_crm"><span data-th="is_crm">CRM</span><span class="material-symbols-outlined" data-th="is_crm" data-arrow="is_crm"></span></th>
-            <th scope="col" data-th="expiry_date"><span data-th="expiry_date">Expiry Date</span><span class="material-symbols-outlined" data-th="expiry_date" data-arrow="expiry_date"></span></th>
+            <th scope="col" data-th="company_name"><span data-th="company_name">Company Name</span><span class="material-symbols-outlined" data-th="company_name" data-arrow="company_name"></span></th>
+            <th scope="col" data-th="type_of_service"><span data-th="type_of_service">Type of service</span><span class="material-symbols-outlined" data-th="type_of_service" data-arrow="type_of_service"></span></th>
+            <th scope="col" data-th="contact_person"><span data-th="contact_person">Contact Person</span><span class="material-symbols-outlined" data-th="contact_person" data-arrow="contact_person"></span></th>
+            <th scope="col" data-th="contact_email"><span data-th="contact_email">Contact E-mail</span><span class="material-symbols-outlined" data-th="contact_email" data-arrow="contact_email"></span></th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
           </tr>
         </thead>
-        <tbody class="table-group-divider" id="rm_table">
+        <tbody class="table-group-divider" id="suppliers_list_table">
         </tbody>
       </table>
       <div class="inline" style="position: relative; bottom: 0px; ">

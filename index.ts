@@ -4,14 +4,20 @@ import { Request, Response } from 'express';
 import path from 'path';
 import expressSession from 'express-session';
 import jsonfile from 'jsonfile';
-import { memoRoutes } from './routes/memoRoute';
+import { noticesRoutes } from './routes/noticesRoute';
 import { loginRoutes } from './routes/loginRoute';
 import { logoutRoutes } from './routes/logoutRoute';
 import { registerRoutes } from './routes/registerRoute';
+import { usefulLinkRoutes } from './routes/usefulLinkRoutes';
+import { usersRoutes } from './routes/usersRoutes';
 import { equipmentRoutes } from './routes/equipmentRoute';
-import { calPeriodRoutes } from './routes/calPeriodRoutes';
-import { supplierListRoutes } from './routes/supplierListRoutes';
-import { rMRoutes } from './routes/rMRoutes';
+import { calibrationPeriodRoutes } from './routes/calibrationPeriodRoutes';
+import { suppliersRoutes } from './routes/suppliersRoutes';
+import { sampleInfoRoutes } from './routes/sampleInfoRoutes';
+import { testingItemRoutes } from './routes/testingItemRoutes';
+import { referenceMaterialsRoutes } from './routes/referenceMaterialsRoutes';
+import { ordersRoutes } from './routes/ordersRoute';
+import { reagentRoutes } from './routes/reagentRoutes';
 import { Client } from 'pg';
 import dotenv from 'dotenv';
 import {Server as SocketIO} from 'socket.io';
@@ -51,19 +57,13 @@ app.use(
 
 declare module 'express-session' {
 	interface SessionData {
-		counter?: number
 		userId?:number
 		user?: string
+		darkTheme?:boolean
 	}
 }
 
 app.use((req, res, next) => {
-	if (req.session.counter) {
-		req.session.counter++
-	} else {
-		req.session.counter = 1
-	}
-	console.log(req.session)
 	const date = new Date()
 	console.log(`[${date.toDateString()}] Request ${req.path}`)
 	next()
@@ -77,15 +77,7 @@ app.use('/', logoutRoutes)
 
 app.use('/', registerRoutes)
 
-app.use('/', equipmentRoutes)
-
-app.use('/', calPeriodRoutes)
-
-app.use('/', supplierListRoutes)
-
-app.use('/', rMRoutes)
-
-app.use('/', memoRoutes)
+app.use('/', noticesRoutes)
 
 app.get('/', function (req: Request, res: Response) {
 	res.sendFile(path.resolve('index.html'))
@@ -95,6 +87,24 @@ app.post('/', (req, res) => {
 	res.sendFile(path.resolve('public', 'index.html'))
 })
 
+app.get('/theme',(req: Request, res: Response) => {
+	if (req.session.darkTheme === undefined) {
+		req.session.darkTheme = false
+	}
+	res.json(req.session.darkTheme)
+})
+
+app.put('/theme',(req: Request, res: Response) => {
+	req.session.darkTheme = req.body.darkTheme
+	res.json('Changed')
+})
+
+app.get('/isuser',(req: Request, res: Response) => {
+	if (!req.session.user) {
+		req.session.user = ''
+	}
+	res.json(req.session.user)
+})
 
 const isLoggedIn = (
 	req: express.Request,
@@ -110,6 +120,26 @@ const isLoggedIn = (
 
 app.use(isLoggedIn, express.static('protected'))
 
+app.use('/', equipmentRoutes)
+
+app.use('/', calibrationPeriodRoutes)
+
+app.use('/', suppliersRoutes)
+
+app.use('/', referenceMaterialsRoutes)
+
+app.use('/', sampleInfoRoutes)
+
+app.use('/', testingItemRoutes)
+
+app.use('/', ordersRoutes)
+
+app.use('/', reagentRoutes)
+
+app.use('/', usersRoutes)
+
+app.use('/', usefulLinkRoutes)
+
 app.get('/admin', (req: Request, res: Response) => {
 	res.sendFile(path.resolve('public/protected', 'admin.html'))
 })
@@ -118,25 +148,34 @@ app.get('/equipment', (req: Request, res: Response) => {
 	res.sendFile(path.resolve('public/protected', 'equipment.html'))
 })
 
-app.get('/cal_period', (req: Request, res: Response) => {
-	res.sendFile(path.resolve('public/protected', 'cal_period.html'))
+app.get('/calibration_period', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'calibration_period.html'))
 })
 
-app.get('/supplier', (req: Request, res: Response) => {
-	res.sendFile(path.resolve('public/protected', 'supplier.html'))
+app.get('/suppliers', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'suppliers.html'))
 })
 
-app.get('/rm', (req: Request, res: Response) => {
-	res.sendFile(path.resolve('public/protected', 'rm.html'))
+app.get('/orders', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'orders.html'))
 })
 
-// app.get('/admin', (req: Request, res: Response) => {
-// 	res.sendFile(path.resolve('public/protected', 'admin.html'))
-// })
+app.get('/reference_materials', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'reference_materials.html'))
+})
 
-// app.get('/admin', (req: Request, res: Response) => {
-// 	res.sendFile(path.resolve('public/protected', 'admin.html'))
-// })
+app.get('/sample_info', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'sample_info.html'))
+})
+
+app.get('/testing_item', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'testing_item.html'))
+})
+
+app.get('/reagent', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'reagent.html'))
+})
+
 
 app.get('/user', async (req: Request, res: Response) => {
 	const likeMemos = await jsonfile.readFile('./user.json')

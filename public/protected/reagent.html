@@ -14,7 +14,8 @@
 </head>
 <body>
   <div id="mainContent" class="container-fluid ">
-    <div id="navBar"></div>
+    <div id="navBar">
+    </div>
     <div class="modal fade" tabindex="-1" id="loginModal" aria-labelledby="loginModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -39,8 +40,8 @@
     </div>
     <div class="row">
       <div id="page_title">
-        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#supplierListModal">
-          Add new item
+        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#reagentModal">
+          Add new reagent
         </button>
         <div class="d-flex" role="search">
           <select id="search_select" class="form-select">
@@ -49,20 +50,38 @@
           <button id="search_btn" class="btn btn-success" disabled>Search</button>
         </div>
       </div>
-      <div class="modal fade" tabindex="-1" id="supplierListModal" aria-labelledby="supplierListModalLabel" aria-hidden="true">
+      <div class="modal fade" tabindex="-1" id="reagentModal" aria-labelledby="reagentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header bg-primary">
-              <h5 class="modal-title" id="supplierListModalLabel">New Supplier</h5>
+              <h5 class="modal-title text-light" id="reagentModalLabel">New Reagent</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form action="/supplier_list" method="post" id="supplierListForm">
-                <input type="text" class="form-control" placeholder="Company Name" aria-label="Company Name" id="company_name">
-                <input type="text" class="form-control" placeholder="Type of service" aria-label="Type of service" id="type_of_service">
-                <input type="text" class="form-control" placeholder="Contact Person" aria-label="Contact Person" id="contact_person">
-                <input type="text" class="form-control" placeholder="Contact email" aria-label="Contact email" id="contact_email">
-                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+              <form action="/reagent_list" method="post" id="reagentForm">
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="name">Reagent Name</label>
+                  <input type="text" class="form-control" aria-label="Reagent Name" id="name">
+                </div>
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="itemSelect">Item</label>
+                  <select id=itemSelect class="form-select" aria-label="Testing Item" data-testing-item></select>
+                </div>
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="referenceMaterialSelect">Reference Material</label>
+                  <select id="referenceMaterialSelect" class="form-select" aria-label="Reference Material" data-reference-materials></select>
+                </div>
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="prepare_date">Prepare Date</label>
+                  <input type="date" class="form-control" aria-label="Prepare Date" id="prepare_date">
+                </div>
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="prepared_by">Prepare By</label>
+                  <input type="text" class="form-control" aria-label="Prepare By" id="prepared_by">
+                </div>
+                <div id="warn_notice" class="text-warning-emphasis"></div>
+                <button type="submit" disabled id="submit_btn" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+                <button type="reset" id="reset_btn" class="btn btn-primary">Reset</button>
               </form>
             </div>
             <div class="modal-footer">
@@ -75,15 +94,18 @@
         <thead>
           <tr>
             <th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
-            <th scope="col" data-th="company_name"><span data-th="company_name">Company Name</span><span class="material-symbols-outlined" data-th="company_name" data-arrow="company_name"></span></th>
-            <th scope="col" data-th="type_of_service"><span data-th="type_of_service">Type of service</span><span class="material-symbols-outlined" data-th="type_of_service" data-arrow="type_of_service"></span></th>
-            <th scope="col" data-th="contact_person"><span data-th="contact_person">Contact Person</span><span class="material-symbols-outlined" data-th="contact_person" data-arrow="contact_person"></span></th>
-            <th scope="col" data-th="contact_email"><span data-th="contact_email">Contact E-mail</span><span class="material-symbols-outlined" data-th="contact_email" data-arrow="contact_email"></span></th>
+            <th scope="col" data-th="name"><span data-th="name">Reagent Name</span><span class="material-symbols-outlined" data-th="name" data-arrow="name"></span></th>
+            <th scope="col" data-th="item"><span data-th="item">Item</span><span class="material-symbols-outlined" data-th="item" data-arrow="item"></span></th>
+            <th scope="col" data-th="rm_no"><span data-th="rm_no">RM No.</span><span class="material-symbols-outlined" data-th="rm_no" data-arrow="rm_no"></span></th>
+            <th scope="col" data-th="batch_id"><span data-th="batch_id">Batch No.</span><span class="material-symbols-outlined" data-th="batch_id" data-arrow="batch_id"></span></th>
+            <th scope="col" data-th="prepare_date"><span data-th="prepare_date">Prepare Date</span><span class="material-symbols-outlined" data-th="prepare_date" data-arrow="prepare_date"></span></th>
+            <th scope="col" data-th="expiry_date"><span data-th="expiry_date">Expiry Date</span><span class="material-symbols-outlined" data-th="expiry_date" data-arrow="expiry_date"></span></th>
+            <th scope="col" data-th="prepare_by"><span data-th="prepare_by">Prepare By Name</span><span class="material-symbols-outlined" data-th="prepare_by" data-arrow="prepare_by"></span></th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
           </tr>
         </thead>
-        <tbody class="table-group-divider" id="supplier_list_table">
+        <tbody class="table-group-divider" id="reagent_table">
         </tbody>
       </table>
       <div class="inline" style="position: relative; bottom: 0px; ">
