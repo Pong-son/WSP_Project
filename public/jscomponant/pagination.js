@@ -18,8 +18,6 @@ const pagination = async (no_of_page) => {
     </a>
     </li>
   `
-  
-  // Add disabled code for the null value
-  }
+}
 
   export { pagination }

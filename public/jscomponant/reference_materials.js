@@ -54,7 +54,7 @@ document
         'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-        chemical_name: chemical_name,
+        chemical_name: chemical_name.replaceAll(' ','_'),
 				is_certified: is_certified,
         expiry_date: expiry_date
 			})
@@ -219,7 +219,7 @@ const editFtn = async (e) => {
     },
     body: JSON.stringify({
       id:currentTarget,
-      chemical_name: chemical_name,
+      chemical_name: chemical_name.replaceAll(' ','_'),
       is_certified: is_certified,
       expiry_date: expiry_date
     })
@@ -230,7 +230,6 @@ const editFtn = async (e) => {
 document.querySelector('#each_page_show')?.addEventListener('input', () => {
   each_page_show = Number(document.querySelector('#each_page_show').value)
   document.querySelector('#each_page_show').blur()
-  console.log(each_page_show)
   loadReferenceMaterialsTable()
 })
 

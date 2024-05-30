@@ -316,7 +316,6 @@ const editFtn = async (e) => {
 document.querySelector('#each_page_show')?.addEventListener('input', () => {
   each_page_show = Number(document.querySelector('#each_page_show').value)
   document.querySelector('#each_page_show').blur()
-  console.log(each_page_show)
   loadSampleTable()
 })
 
@@ -412,6 +411,5 @@ const checkNoOfSelect = () => {
     })
   })
 }
-
 
 export { loadTestingItem, loadSampleTable }

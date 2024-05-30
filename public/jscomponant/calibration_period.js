@@ -50,7 +50,7 @@ document
         'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-        parameter: parameter,
+        parameter: parameter.replaceAll(' ','_'),
 				calibration_period: calibration_period
 			})
 		})
@@ -196,7 +196,7 @@ const editFtn = async (e) => {
     },
     body: JSON.stringify({
       id:currentTarget,
-      parameter: parameter,
+      parameter: parameter.replaceAll(' ','_'),
       calibration_period: calibration_period
     })
   })
@@ -206,7 +206,6 @@ const editFtn = async (e) => {
 document.querySelector('#each_page_show')?.addEventListener('input', () => {
   each_page_show = Number(document.querySelector('#each_page_show').value)
   document.querySelector('#each_page_show').blur()
-  console.log(each_page_show)
   loadCalTable()
 })
 

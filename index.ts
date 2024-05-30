@@ -1,9 +1,7 @@
 import express from 'express';
-import http from 'http';
 import { Request, Response } from 'express';
 import path from 'path';
 import expressSession from 'express-session';
-import jsonfile from 'jsonfile';
 import { noticesRoutes } from './routes/noticesRoute';
 import { loginRoutes } from './routes/loginRoute';
 import { logoutRoutes } from './routes/logoutRoute';
@@ -20,8 +18,6 @@ import { ordersRoutes } from './routes/ordersRoute';
 import { reagentRoutes } from './routes/reagentRoutes';
 import { Client } from 'pg';
 import dotenv from 'dotenv';
-import {Server as SocketIO} from 'socket.io';
-// import XLSX from 'xlsx';
 
 dotenv.config();
 
@@ -34,12 +30,6 @@ export const client = new Client({
 client.connect()
 
 const app = express()
-const server = new http.Server(app);
-export const io = new SocketIO(server);
-
-io.on('connection', function (socket) {
-	socket;
-});
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -49,7 +39,7 @@ const PORT = 8080;
 
 app.use(
 	expressSession({
-		secret: 'Tecky Academy teaches typescript',
+		secret: 'Lab Management System',
 		resave: true,
 		saveUninitialized: true
 	})
@@ -176,37 +166,11 @@ app.get('/reagent', (req: Request, res: Response) => {
 	res.sendFile(path.resolve('public/protected', 'reagent.html'))
 })
 
-
-app.get('/user', async (req: Request, res: Response) => {
-	const likeMemos = await jsonfile.readFile('./user.json')
-	res.json(likeMemos);
-})
-
-app.get('/like_memos', async (req: Request, res: Response) => {
-	res.sendFile(path.resolve('public/protected', 'like_memos.html'))
-})
-
-app.put('/like_memo', async (req: express.Request, res: express.Response) => {
-	console.log(req.session.userId)
-	let userId = req.session.userId
-	let memoId = req.body.id
-	console.log(userId,memoId)
-	try {
-		await client.query(
-			`INSERT INTO likes (user_id,memo_id) VALUES (${userId}, ${memoId});`
-		)
-		console.log("like")
-	} catch (err) {
-		err
-	}
-	res.json('Liked')
-})
-
 app.use((req, res) => {
 	res.status(404)
 	res.sendFile(path.resolve('public', '404.html'))
 })
 
-server.listen(PORT, () => {
+app.listen(PORT, () => {
 	console.log(`Listening at http://localhost:${PORT}/`)
 })

@@ -3,7 +3,6 @@ import { pagination } from './pagination.js'
 import { sort_by_item, sort_by } from'./search.js';
 
 let useful_link_table = document.querySelector('#useful_link')
-// fixed variable
 let each_page_show = Number(document.querySelector('#each_page_show')?.value);
 let current_page = 1;
 let order_by = 'id';
@@ -44,9 +43,9 @@ document
   ?.addEventListener('submit', async (event) => {
     event.preventDefault() // To prevent the form from submitting synchronously
     const form = event.target
-    let title = form.title.value
+    let title = (form.title.value).replaceAll(' ','_')
     let link = form.link.value
-    let used_for = form.used_for.value
+    let used_for = (form.used_for.value).replaceAll(' ','_')
     
     const res = await fetch('/useful_link_list', {
       method: 'POST',
@@ -65,7 +64,6 @@ document
     document.querySelector('#link').value = ''
     document.querySelector('#used_for').value = ''
     loadUsefulLinkTable()
-
 });
 
 const loadUsefulLinkTable = async () => {
@@ -103,7 +101,7 @@ const loadUsefulLinkTable = async () => {
           <input class="hide" type='text' data-title="${link.id}" value=${link.title}>
           <input class="hide" type='text' data-link="${link.id}" value=${link.link}>
           </td>
-          <td><input disabled type='text' data-used-for="${link.id}" value=${link.used_for}></td>
+          <td><input class="form-control" disabled type='text' data-used-for="${link.id}" value=${link.used_for}></td>
           <td>
             <button data-edit="${link.id}">Edit</button>
             <button data-done="${link.id}" class="hide">Done</button>
@@ -215,9 +213,9 @@ const editFtn = async (e) => {
     },
     body: JSON.stringify({
       id:currentTarget,
-      title: title,
+      title: title.replaceAll(' ','_'),
       link: link,
-      used_for: used_for
+      used_for: used_for.replaceAll(' ','_')
     })
   })
   loadUsefulLinkTable()

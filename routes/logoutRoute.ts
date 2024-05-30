@@ -14,7 +14,6 @@ const getLogout =  async (req: express.Request, res: express.Response) => {
 	}
 }
 
-
 logoutRoutes.get('/logout', getLogout)
 
 export { logoutRoutes, getLogout }

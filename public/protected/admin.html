@@ -55,7 +55,7 @@
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-header bg-primary">
-								<h5 class="modal-title text-light" id="userModalLabel">New User</h5>
+								<h5 class="modal-title text-light" id="userModalLabel">New User</h5>cript
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
@@ -78,7 +78,6 @@
 										<input type="password" class="form-control" id="cfmRPassWord">
 									</div>
 									<br />
-									<div id="regWarn"></div>
 									<div id="warn_notice" class="text-warning-emphasis"></div>
 									<button type="submit" disabled id="submit_btn" class="btn btn-primary" data-bs-dismiss="modal">Register</button>
 									<button type="reset" id="reset_btn" class="btn btn-primary">Reset</button>
@@ -122,32 +121,35 @@
 						</div>
 					</div>
 				</div>
-
-				<table class="table table-bordered table-hover table-striped" >
-					<thead>
-						<tr>
-							<th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
-							<th scope="col" data-th="name"><span data-th="name">User Name</span><span class="material-symbols-outlined" data-th="name" data-arrow="name"></span></th>
-							<th scope="col" data-th="email"><span data-th="email">E-mail</span><span class="material-symbols-outlined" data-th="email" data-arrow="email"></span></th>
-							<th scope="col" data-th="is_admin"><span data-th="is_admin">Is_admin</span><span class="material-symbols-outlined" data-th="is_admin" data-arrow="is_admin"></span></th>
-							<th scope="col" data-th="password"><span data-th="password">Change Password</span><span class="material-symbols-outlined" data-th="password" data-arrow="password"></span></th>
-							<th scope="col" data-th="admin"><span data-th="admin">Upgrade to Admin</span><span class="material-symbols-outlined" data-th="admin" data-arrow="admin"></span></th>
-							<th scope="col">Edit</th>
-							<th scope="col">Delete</th>
-						</tr>
-					</thead>
-					<tbody class="table-group-divider" id="users_table"></tbody>
-				</table>
-				<div class="inline" style="position: relative; bottom: 0px; ">
+				<div class="table-responsive-md">
+					<table class="table table-bordered table-hover table-striped" >
+						<thead>
+							<tr>
+								<th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
+								<th scope="col" data-th="name"><span data-th="name">User Name</span><span class="material-symbols-outlined" data-th="name" data-arrow="name"></span></th>
+								<th scope="col" data-th="email"><span data-th="email">E-mail</span><span class="material-symbols-outlined" data-th="email" data-arrow="email"></span></th>
+								<th scope="col" data-th="is_admin"><span data-th="is_admin">Is_admin</span><span class="material-symbols-outlined" data-th="is_admin" data-arrow="is_admin"></span></th>
+								<th scope="col" data-th="password"><span data-th="password">Change Password</span><span class="material-symbols-outlined" data-th="password" data-arrow="password"></span></th>
+								<th scope="col" data-th="admin"><span data-th="admin">Upgrade to Admin</span><span class="material-symbols-outlined" data-th="admin" data-arrow="admin"></span></th>
+								<th scope="col">Edit</th>
+								<th scope="col">Delete</th>
+							</tr>
+						</thead>
+						<tbody class="table-group-divider" id="users_table"></tbody>
+					</table>
+				</div>
+				<div style="display:flex; position: relative; bottom: 0px; ">
 					<nav aria-label="Page navigation example">
 						<ul class="pagination">
 						</ul>
 					</nav>
-					<input type="number" name="each_page_show" id="each_page_show" value="10" min="1" max="100">
+					<div class="input-group" style="height: 37.6px; margin-left: 25px; max-width: 230px;">
+						<span class="input-group-text" >Show on each page</span>
+						<input class="form-control" style="height: 37.6px;"  type="number" name="each_page_show" id="each_page_show" value="10" min="1" max="100">
+					</div>
 				</div>
 			</div>
 		</div>
-		<script src="/socket.io/socket.io.js"></script>
 		<script
 			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
 			integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

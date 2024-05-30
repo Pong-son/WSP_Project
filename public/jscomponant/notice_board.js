@@ -52,9 +52,7 @@ document
 const loadNotice = async () => {
 	try {
 		if (window.location.pathname === '/') {
-
 			const res = await fetch('/notices')
-		
 			const notices = await res.json()
 		
 			const noticesContainer = document.querySelector('#notices_content')
@@ -66,6 +64,9 @@ const loadNotice = async () => {
 				for (let notice of notices) {
 					noticesContainer.innerHTML += `<div class="notice" id=${notice.id}>
 							<input type="text" id=data${notice.id} data-id=${notice.id} value=${notice.content}>
+							<span class="norice_topic" notice-topic=${notice.id}>
+								${notice.topic}
+							</span>
 							<span class="material-symbols-outlined" notice-del=${notice.id} data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Delete">
 								delete
 							</span>
@@ -107,7 +108,10 @@ const loadNotice = async () => {
 					loadNotice()
 				})
 			})
-		
+			document.querySelector('#add_notice').setAttribute('data-bs-toggle','tooltip')
+			document.querySelector('#add_notice').setAttribute('data-bs-placement','left')
+			document.querySelector('#add_notice').setAttribute('data-bs-title','Add new notice')
+
 			const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 			tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 		}

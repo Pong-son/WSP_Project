@@ -1,9 +1,6 @@
 import express from 'express';
-// import { parse } from '../utils';
-// import formidable from 'formidable';
 import { client } from '../index';
 import { pagination } from '../pagination'
-
 
 const testingItemRoutes = express.Router()
 
@@ -94,8 +91,6 @@ const putTestingItem = async (req: express.Request, res: express.Response) => {
 	}
 	res.json('Edited')
 }
-
-
 
 testingItemRoutes.get('/testing_item_list', getTestingItem)
 testingItemRoutes.post('/testing_item_list', postTestingItem)

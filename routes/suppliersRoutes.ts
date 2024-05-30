@@ -2,7 +2,6 @@ import express from 'express';
 import { client } from '../index';
 import { pagination } from '../pagination'
 
-
 const suppliersRoutes = express.Router()
 
 const getSuppliers = async (req: express.Request, res: express.Response) => {
@@ -91,8 +90,6 @@ const putSuppliers = async (req: express.Request, res: express.Response) => {
 	}
 	res.json('Edited')
 }
-
-
 
 suppliersRoutes.get('/suppliers_list', getSuppliers)
 suppliersRoutes.post('/suppliers_list', postSuppliers)

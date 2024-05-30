@@ -41,7 +41,7 @@
     <div class="row">
       <div id="page_title">
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#rMModal">
-          Add new item
+          Add new reference material
         </button>
         <div class="d-flex" role="search">
           <select id="search_select" class="form-select">
@@ -85,30 +85,34 @@
           </div>
         </div>
       </div>
-      <table class="table table-bordered table-hover table-striped" >
-        <thead>
-          <tr>
-            <th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
-            <th scope="col" data-th="chemical_name"><span data-th="chemical_name">Chemical Name</span><span class="material-symbols-outlined" data-th="chemical_name" data-arrow="chemical_name"></span></th>
-            <th scope="col" data-th="is_crm"><span data-th="is_crm">CRM</span><span class="material-symbols-outlined" data-th="is_crm" data-arrow="is_crm"></span></th>
-            <th scope="col" data-th="expiry_date"><span data-th="expiry_date">Expiry Date</span><span class="material-symbols-outlined" data-th="expiry_date" data-arrow="expiry_date"></span></th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider" id="reference_materials_table">
-        </tbody>
-      </table>
-      <div class="inline" style="position: relative; bottom: 0px; ">
+      <div class="table-responsive-md">
+        <table class="table table-bordered table-hover table-striped" >
+          <thead>
+            <tr>
+              <th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
+              <th scope="col" data-th="chemical_name"><span data-th="chemical_name">Chemical Name</span><span class="material-symbols-outlined" data-th="chemical_name" data-arrow="chemical_name"></span></th>
+              <th scope="col" data-th="is_crm"><span data-th="is_crm">CRM</span><span class="material-symbols-outlined" data-th="is_crm" data-arrow="is_crm"></span></th>
+              <th scope="col" data-th="expiry_date"><span data-th="expiry_date">Expiry Date</span><span class="material-symbols-outlined" data-th="expiry_date" data-arrow="expiry_date"></span></th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider" id="reference_materials_table">
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex; position: relative; bottom: 0px; ">
         <nav aria-label="Page navigation example">
           <ul class="pagination">
           </ul>
         </nav>
-        <input type="number" name="each_page_show" id="each_page_show" value="10" min="1" max="100">
+        <div class="input-group" style="height: 37.6px; margin-left: 25px; max-width: 230px;">
+          <span class="input-group-text" >Show on each page</span>
+          <input class="form-control" style="height: 37.6px;"  type="number" name="each_page_show" id="each_page_show" value="10" min="1" max="100">
+        </div>
       </div>
     </div>
   </div>
-  <script src="/socket.io/socket.io.js"></script>
   <script
     src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

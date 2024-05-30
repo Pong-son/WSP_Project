@@ -78,7 +78,7 @@ document
         'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-        name: name,
+        name: name.replaceAll(' ','_'),
         item: item,
         reference_material: reference_material,
 				prepare_date: prepare_date,
@@ -120,7 +120,7 @@ const editFtn = async (e) => {
     },
     body: JSON.stringify({
       id:currentTarget,
-      name: name,
+      name: name.replaceAll(' ','_'),
       item: item,
       chemical_name: chemical_name,
       prepare_date: prepare_date,

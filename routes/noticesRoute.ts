@@ -1,7 +1,5 @@
 import express from 'express';
 import { client } from '../index';
-import { io } from '../index';
-
 
 const noticesRoutes = express.Router()
 
@@ -31,7 +29,6 @@ const postNotices = async (req: express.Request, res: express.Response) => {
 				[req.body.topic, req.body.content]
 		)
 		noticesList
-		io.emit("new-notices","Congratulations! New Notices Created!");
 	} catch (err) {
 		console.log(err)
 	}

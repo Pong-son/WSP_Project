@@ -47,7 +47,7 @@ document
         'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-        name: name,
+        name: name.replaceAll(' ','_'),
 			})
 		})
 		const result = await res.json()
@@ -186,7 +186,7 @@ const editFtn = async (e) => {
     },
     body: JSON.stringify({
       id:currentTarget,
-      name: name
+      name: name.replaceAll(' ','_')
     })
   })
   loadTestingItemTable()
@@ -195,7 +195,6 @@ const editFtn = async (e) => {
 document.querySelector('#each_page_show')?.addEventListener('input', () => {
   each_page_show = Number(document.querySelector('#each_page_show').value)
   document.querySelector('#each_page_show').blur()
-  console.log(each_page_show)
   loadTestingItemTable()
 })
 

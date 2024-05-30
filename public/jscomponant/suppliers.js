@@ -56,9 +56,9 @@ document
         'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-        company_name: company_name,
-				type_of_service: type_of_service,
-        contact_person: contact_person,
+        company_name: company_name.replaceAll(' ','_'),
+				type_of_service: type_of_service.replaceAll(' ','_'),
+        contact_person: contact_person.replaceAll(' ','_'),
         contact_email: contact_email
 			})
 		})
@@ -216,9 +216,9 @@ const editFtn = async (e) => {
     },
     body: JSON.stringify({
       id:currentTarget,
-      company_name: company_name,
-      type_of_service: type_of_service,
-      contact_person: contact_person,
+      company_name: company_name.replaceAll(' ','_'),
+      type_of_service: type_of_service.replaceAll(' ','_'),
+      contact_person: contact_person.replaceAll(' ','_'),
       contact_email: contact_email
     })
   })
@@ -228,7 +228,6 @@ const editFtn = async (e) => {
 document.querySelector('#each_page_show')?.addEventListener('input', () => {
   each_page_show = Number(document.querySelector('#each_page_show').value)
   document.querySelector('#each_page_show').blur()
-  console.log(each_page_show)
   loadSupplierTable()
 })
 

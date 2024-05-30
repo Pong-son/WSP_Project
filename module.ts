@@ -4,9 +4,4 @@ interface User {
 	password: string
 }
 
-// interface memoRecord {
-// 	content: string | string[]
-// 	image?: string
-// }
-
 export { User }

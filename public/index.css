@@ -24,6 +24,14 @@ body {
 	background-blend-mode: multiply;
 }
 
+.home_content_without_login {
+	width: 30%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
 #page_title {
 	display: flex;
 	justify-content: space-between;
@@ -39,6 +47,7 @@ nav li:hover {
 #notice_board {
 	background-color: white;
 }
+
 .notice {
 	position: relative;
 	aspect-ratio: 1/1;
@@ -52,7 +61,12 @@ nav li:hover {
 
 .material-symbols-outlined {
 	color: black;
-	/* font-variation-settings: 'wdth' 1000; */
+}
+
+[notice-topic] {
+	position: absolute;
+	font-size: 17px;
+	left: 4%;
 }
 
 [notice-del] {

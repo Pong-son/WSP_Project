@@ -31,7 +31,6 @@ const postLogin =  async (req: express.Request, res: express.Response) => {
 	}
 }
 
-
 loginRoutes.post('/login', postLogin)
 
 export { loginRoutes, postLogin }

@@ -81,9 +81,9 @@ document
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: name,
+          name: name.replaceAll(' ','_'),
           order_no: order_no,
-          product: product,
+          product: product.replaceAll(' ','_'),
           price: price,
           confirm_date: confirm_date,
           username: username
@@ -123,9 +123,9 @@ const editFtn = async (e) => {
     },
     body: JSON.stringify({
       id:currentTarget,
-      name: name,
+      name: name.replaceAll(' ','_'),
       order_no: order_no,
-      product: product,
+      product: product.replaceAll(' ','_'),
       price: price,
       confirm_date: confirm_date,
       username: username
@@ -137,7 +137,6 @@ const editFtn = async (e) => {
 document.querySelector('#each_page_show')?.addEventListener('input', () => {
   each_page_show = Number(document.querySelector('#each_page_show').value)
   document.querySelector('#each_page_show').blur()
-  console.log(each_page_show)
   loadOrderTable()
 })
 
@@ -245,6 +244,7 @@ const loadOrderTable = async () => {
             document.querySelector(`[data-company-name="${target}"]`).removeAttribute("disabled")
             document.querySelector(`[data-order-no="${target}"]`).removeAttribute("disabled")
             document.querySelector(`[data-product="${target}"]`).removeAttribute("disabled")
+            document.querySelector(`[data-price="${target}"]`).removeAttribute("disabled")
             document.querySelector(`[data-confirm-date="${target}"]`).removeAttribute("disabled")
             document.querySelector(`[data-prepare-by="${target}"]`).removeAttribute("disabled")
             document.querySelector(`[data-done="${target}"]`).classList.remove('hide')
@@ -275,6 +275,7 @@ const loadOrderTable = async () => {
           document.querySelector(`[data-company-name="${target}"]`).setAttribute("disabled","")
           document.querySelector(`[data-order-no="${target}"]`).setAttribute("disabled","")
           document.querySelector(`[data-product="${target}"]`).setAttribute("disabled","")
+          document.querySelector(`[data-price="${target}"]`).setAttribute("disabled","")
           document.querySelector(`[data-confirm-date="${target}"]`).setAttribute("disabled","")
           document.querySelector(`[data-prepare-by="${target}"]`).setAttribute("disabled","")
           document.querySelector(`[data-done="${target}"]`).classList.add('hide')
@@ -288,6 +289,7 @@ const loadOrderTable = async () => {
           document.querySelector(`[data-company-name="${target}"]`).setAttribute("disabled","")
           document.querySelector(`[data-order-no="${target}"]`).setAttribute("disabled","")
           document.querySelector(`[data-product="${target}"]`).setAttribute("disabled","")
+          document.querySelector(`[data-price="${target}"]`).setAttribute("disabled","")
           document.querySelector(`[data-confirm-date="${target}"]`).setAttribute("disabled","")
           document.querySelector(`[data-prepare-by="${target}"]`).setAttribute("disabled","")
           document.querySelector(`[data-done="${target}"]`).classList.add('hide')

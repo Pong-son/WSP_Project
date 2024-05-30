@@ -2,7 +2,6 @@ import express from 'express';
 import { client } from '../index';
 import { pagination } from '../pagination'
 
-
 const sampleInfoRoutes = express.Router()
 
 const getSampleInfo = async (req: express.Request, res: express.Response) => {
@@ -65,7 +64,6 @@ const postSampleInfo = async (req: express.Request, res: express.Response) => {
 			)
 			
 		let testingItemList
-
 		
 		let sample_info_id: number =  sampleInfoList.rows[0].id
 		
@@ -91,16 +89,11 @@ const postSampleInfo = async (req: express.Request, res: express.Response) => {
 	res.json({updated:1})
 }
 
-
-
-
 const delSampleInfo = async (req: express.Request, res: express.Response) => {
 	try {
-
 		let testing_info = await client.query(
 			`delete from testing_info where id = ${req.params.id} RETURNING sample_info_id`
 		)
-
 		let new_testing_item = await client.query(
 			`select * from testing_info where sample_info_id = $1`, [testing_info.rows[0].sample_info_id] 
 		)
@@ -139,17 +132,12 @@ const putSampleInfo = async (req: express.Request, res: express.Response) => {
 				'update testing_info set testing_item_id = $1, batch_id = $2, updated_at = $3 where id = $4',
 				[testing_item.rows[0].id, new_batch_id.rows.length === 0?1:new_batch_id.rows[0].batch_id +1,new Date, req.body.id]
 			)
-			// if (req.body.name) {
-			// 	let new_batch_id = sample_info_testing_item_id.rows.length +1
-			// }
 		}
 	} catch (err) {
 		console.log(err)
 	}
 	res.json('Edited')
 }
-
-
 
 sampleInfoRoutes.get('/sample_info_list', getSampleInfo)
 sampleInfoRoutes.post('/sample_info_list', postSampleInfo)

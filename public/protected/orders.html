@@ -41,7 +41,7 @@
     <div class="row">
       <div id="page_title">
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#orderModal">
-          Add order
+          Add new order
         </button>
         <div class="d-flex" role="search">
           <select id="search_select" class="form-select">
@@ -90,34 +90,37 @@
           </div>
         </div>
       </div>
-      <table class="table table-bordered table-hover table-striped" >
-        <thead>
-          <!-- need to change -->
-          <tr>
-            <th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
-            <th scope="col" data-th="company_name"><span data-th="company_name">Supplier Name</span><span class="material-symbols-outlined" data-th="company_name" data-arrow="company_name"></span></th>
-            <th scope="col" data-th="order_no"><span data-th="order_no">Order No.</span><span class="material-symbols-outlined" data-th="order_no" data-arrow="order_no"></span></th>
-            <th scope="col" data-th="product"><span data-th="product">Product</span><span class="material-symbols-outlined" data-th="product" data-arrow="product"></span></th>
-            <th scope="col" data-th="price"><span data-th="price">Price</span><span class="material-symbols-outlined" data-th="price" data-arrow="price"></span></th>
-            <th scope="col" data-th="confirm_date"><span data-th="confirm_date">Order Confirm Date</span><span class="material-symbols-outlined" data-th="confirm_date" data-arrow="confirm_date"></span></th>
-            <th scope="col" data-th="username"><span data-th="username">Order By</span><span class="material-symbols-outlined" data-th="username" data-arrow="username"></span></th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider" id="orders_table">
-        </tbody>
-      </table>
-      <div class="inline" style="position: relative; bottom: 0px; ">
+      <div class="table-responsive-md">
+        <table class="table table-bordered table-hover table-striped" >
+          <thead>
+            <tr>
+              <th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
+              <th scope="col" data-th="company_name"><span data-th="company_name">Supplier Name</span><span class="material-symbols-outlined" data-th="company_name" data-arrow="company_name"></span></th>
+              <th scope="col" data-th="order_no"><span data-th="order_no">Order No.</span><span class="material-symbols-outlined" data-th="order_no" data-arrow="order_no"></span></th>
+              <th scope="col" data-th="product"><span data-th="product">Product</span><span class="material-symbols-outlined" data-th="product" data-arrow="product"></span></th>
+              <th scope="col" data-th="price"><span data-th="price">Price</span><span class="material-symbols-outlined" data-th="price" data-arrow="price"></span></th>
+              <th scope="col" data-th="confirm_date"><span data-th="confirm_date">Order Confirm Date</span><span class="material-symbols-outlined" data-th="confirm_date" data-arrow="confirm_date"></span></th>
+              <th scope="col" data-th="username"><span data-th="username">Order By</span><span class="material-symbols-outlined" data-th="username" data-arrow="username"></span></th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider" id="orders_table">
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex; position: relative; bottom: 0px; ">
         <nav aria-label="Page navigation example">
           <ul class="pagination">
           </ul>
         </nav>
-        <input type="number" name="each_page_show" id="each_page_show" value="10" min="1" max="100">
+        <div class="input-group" style="height: 37.6px; margin-left: 25px; max-width: 230px;">
+          <span class="input-group-text" >Show on each page</span>
+          <input class="form-control" style="height: 37.6px;"  type="number" name="each_page_show" id="each_page_show" value="10" min="1" max="100">
+        </div>
       </div>
     </div>
   </div>
-  <script src="/socket.io/socket.io.js"></script>
   <script
     src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

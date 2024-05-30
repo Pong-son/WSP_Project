@@ -80,9 +80,9 @@ document
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: name,
-          brand: brand,
-          model: model,
+          name: name.replaceAll(' ','_'),
+          brand: brand.replaceAll(' ','_'),
+          model: model.replaceAll(' ','_'),
           parameter: parameter,
           calibration_date: calibration_date
         })
@@ -121,9 +121,9 @@ const editFtn = async (e) => {
     },
     body: JSON.stringify({
       id:currentTarget,
-      name: name,
-      brand: brand,
-      model: model,
+      name: name.replaceAll(' ','_'),
+      brand: brand.replaceAll(' ','_'),
+      model: model.replaceAll(' ','_'),
       parameter: parameter,
       calibration_date: calibration_date
     })

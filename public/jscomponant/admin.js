@@ -15,13 +15,26 @@ let path = window.location.pathname
 if(path === '/admin') {
   document.querySelectorAll('.form-control').forEach(item => {
     item.addEventListener('change',() => {
-        let rUserName = document.querySelector('#rUserName')
-        let email = document.querySelector('#email')
-        let rPassWord = document.querySelector('#rPassWord')
-        let cfmRPassWord = document.querySelector('#cfmRPassWord')
-        if (rUserName.value !== '' && email.value !== '' && rPassWord.value !== '' && cfmRPassWord.value !== '') {
-          document.querySelector('#submit_btn').removeAttribute('disabled')
-          document.querySelector('#warn_notice').textContent = ''
+        let rUserName = document.querySelector('#rUserName').value
+        let email = document.querySelector('#email').value
+        let rPassWord = document.querySelector('#rPassWord').value
+        let cfmRPassWord = document.querySelector('#cfmRPassWord').value
+        let regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,}$/
+        
+        if (rUserName !== '' && email !== '' && rPassWord !== '' && cfmRPassWord !== '') {
+          // validation for password
+          if (!regex.test(rPassWord)) {
+            document.querySelector('#warn_notice').textContent = "Password must be at 4 characters, as least one number, one capital letter, one lower case letter"
+          } else {
+            // two passwords matching
+            if (rPassWord !== cfmRPassWord) {
+              document.querySelector('#warn_notice').textContent = "Two passwords are not match!"
+              return
+            } else {
+              document.querySelector('#submit_btn').removeAttribute('disabled')
+              document.querySelector('#warn_notice').textContent = ''
+            }
+          }
         } else {
           document.querySelector('#submit_btn').setAttribute('disabled','')
           document.querySelector('#warn_notice').textContent = 'Fill in all the information!'
@@ -40,11 +53,21 @@ if(path === '/admin') {
 
   document.querySelectorAll('.form-control').forEach(item => {
     item.addEventListener('change',() => {
-        let newPassword = document.querySelector('#newPassword')
-        let cfmNewPassword = document.querySelector('#cfmNewPassword')
-        if (newPassword.value !== '' && cfmNewPassword.value !== '') {
-          document.querySelector('#submit_btn_change_pw').removeAttribute('disabled')
-          document.querySelector('#warn_notice_change_pw').textContent = ''
+        let newPassword = document.querySelector('#newPassword').value
+        let cfmNewPassword = document.querySelector('#cfmNewPassword').value
+        let regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,}$/
+        if (newPassword !== '' && cfmNewPassword !== '') {
+          if (!regex.test(newPassword)) {
+            document.querySelector('#warn_notice_change_pw').textContent = "Password must be at 4 characters, as least one number, one capital letter, one lower case letter"
+          } else {
+            if(newPassword !== cfmNewPassword) {
+              document.querySelector('#warn_notice_change_pw').textContent = 'Two password are not match!'
+              return
+            } else {
+              document.querySelector('#submit_btn_change_pw').removeAttribute('disabled')
+              document.querySelector('#warn_notice_change_pw').textContent = ''
+            }
+          }
         } else {
           document.querySelector('#submit_btn_change_pw').setAttribute('disabled','')
           document.querySelector('#warn_notice_change_pw').textContent = 'Fill in all the information!'
@@ -70,12 +93,7 @@ document
 		let rUserName = form.rUserName.value
     let email = form.email.value
 		let rPassWord = form.rPassWord.value
-		let cfmRPassWord = form.cfmRPassWord.value
 
-		if(rPassWord !== cfmRPassWord) {
-			document.querySelector('#regWarn').innerHTML = "Two password are not match!"
-			return
-		}
 		const res = await fetch('/register', {
 			method: 'POST',
 			headers: {
@@ -88,7 +106,6 @@ document
 			})
 		})
 		const result = await res.json()
-		console.log(result)
 
 		document.querySelector('#rUserName').value = ''
 		document.querySelector('#rPassWord').value = ''
@@ -101,33 +118,26 @@ document
 document
 	.querySelector('#changePwForm')
 	?.addEventListener('submit', async (event) => {
-    console.log('changepw')
 		event.preventDefault() // To prevent the form from submitting synchronously
 		const form = event.target
 		let newPassWord = form.newPassword.value
-		let cfmNewPassWord = form.cfmNewPassword.value
 
-		if(newPassWord !== cfmNewPassWord) {
-			document.querySelector('#regWarn_change_pw').innerHTML = "Two password are not match!"
-			return
-		}
-		const res = await fetch(`/users_list${form.id_change_pw.value}`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
+    const res = await fetch(`/users_list${form.id_change_pw.value}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
         changePw: true,
-				id: form.id_change_pw.value,
-        password:cfmNewPassWord
-			})
-		})
-		const result = await res.json()
-		console.log(result)
+        id: form.id_change_pw.value,
+        password:newPassWord
+      })
+    })
+    const result = await res.json()
 
-		document.querySelector('#id_change_pw').value = ''
-		document.querySelector('#newPassword').value = ''
-		document.querySelector('#cfmNewPassword').value = ''
+    document.querySelector('#id_change_pw').value = ''
+    document.querySelector('#newPassword').value = ''
+    document.querySelector('#cfmNewPassword').value = ''
 
     loadUsersTable()
 	})
@@ -207,7 +217,6 @@ const loadUsersTable = async () => {
             })
           })
           const result = await res.json()
-          console.log(result)
       
           document.querySelector('#id_change_pw').value = ''
           document.querySelector('#newPassword').value = ''
@@ -319,7 +328,6 @@ const editFtn = async (e) => {
 document.querySelector('#each_page_show')?.addEventListener('input', () => {
   each_page_show = Number(document.querySelector('#each_page_show').value)
   document.querySelector('#each_page_show').blur()
-  console.log(each_page_show)
   loadUsersTable()
 })
 

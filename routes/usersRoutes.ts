@@ -93,8 +93,6 @@ const putUsers = async (req: express.Request, res: express.Response) => {
 	res.json('Edited')
 }
 
-
-
 usersRoutes.get('/users_list', getUsers)
 usersRoutes.delete('/users_list:id', delUsers)
 usersRoutes.put('/users_list:id', putUsers)

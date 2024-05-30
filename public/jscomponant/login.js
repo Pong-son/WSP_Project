@@ -5,13 +5,10 @@ let login;
 let loginName = window.sessionStorage.getItem('username');
 loginName?login = true: login = false;
 
-// let getLoginName = () => {
-// 	return
-// }
+
 const loginBtn = async () => {
 	document.querySelector('#loginBtn')?.addEventListener('click', async () => {
 		if(login) {
-			console.log('test')
 			window.sessionStorage.clear()
 			const res = await fetch('/logout')
 			login = false
@@ -68,10 +65,50 @@ const checkLogin = async () => {
 	}
 	let path = window.location.pathname
 	if(path === '/'  && !login) {
-		let content = `<div style="background-color:black;">
-      Welcome To XXX!
-    </div>`
+		let content = `
+			<div class='home_content_without_login'>
+				<form action="/login" method="post" id="mainLoginForm">
+					<input type="text" name="userName" id="userName" class="form-control" placeholder="Username" aria-label="username"/>
+					<br />
+					<input type="password" name="passWord" id="passWord" class="form-control" placeholder="Password" aria-label="Password"/>
+					<br />
+					<button type="submit" data-bs-dismiss="modal">Login</button>
+				</form>
+			</div>`
     document.querySelector('#home_content').innerHTML = content
+
+		document
+			.querySelector('#mainLoginForm')
+			.addEventListener('submit', async (event) => {
+				event.preventDefault() // To prevent the form from submitting synchronously
+				const form = event.target
+				let userName = form.userName.value
+				let passWord = form.passWord.value
+
+				const res = await fetch('/login', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						username: userName,
+						password: passWord
+					})
+				})
+				const result = await res.json()
+				if (result === 'admin') {
+					window.sessionStorage.setItem('username',userName)
+					window.sessionStorage.setItem('admin','admin')
+					login = true
+				} else if (result === 'done') {
+					window.sessionStorage.setItem('username',userName)
+					login = true
+				}
+				document.querySelector('#userName').value = ''
+				document.querySelector('#passWord').value = ''
+				checkLogin()
+				location.reload()
+			})
 	}
 }
 
