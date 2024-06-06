@@ -51,8 +51,8 @@ const navBar = (login) => {
                 <li><a class="dropdown-item text-light" href="/orders">Purchase Order</a></li>
               </ul>
             </li>
-            <li class="nav-item">
-              <a class="nav-link text-light" href="/admin" data-admin>User Management</a>
+            <li class="nav-item admin_hide">
+              <a class="nav-link text-light" href="/admin">User Management</a>
             </li>
           </ul>
           <div class="d-flex">

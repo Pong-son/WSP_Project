@@ -1,6 +1,6 @@
 import express from 'express';
 import { client } from '../index';
-import { pagination } from '../pagination'
+import { pagination } from '../utilities/pagination'
 
 
 const reagentRoutes = express.Router()
@@ -13,37 +13,11 @@ const getReagent = async (req: express.Request, res: express.Response) => {
 		let limit: number = req.query.limit?Number(req.query.limit):10
 		let order_by:string = req.query.order_by?req.query.order_by.toString():'id'
 		let order_by_ascending:string = req.query.order_by_ascending === 'true'?'':'DESC'
-		let sort_by_item = req.query.sort_by_item?req.query.sort_by_item:''
-		let sort_by = req.query.sort_by?req.query.sort_by:''
 
 		let reagentList:any = []
-		if (sort_by) {
-			reagentList = await client.query(`SELECT reagent_sample_info.id, reagent.name, testing_item.name AS item, reference_materials.chemical_name, testing_info.batch_id, reagent.prepare_date, reagent.expiry_date, reagent.prepared_by FROM reagent_sample_info JOIN reagent ON reagent_sample_info.reagent_id = reagent.id LEFT OUTER JOIN testing_info ON reagent_sample_info.testing_info_id = testing_info.id LEFT OUTER JOIN reference_materials ON reagent.reference_materials_id = reference_materials.id JOIN testing_item ON reagent.testing_item_id = testing_item.id`)
-			await reagentList.rows?.forEach((item:any) => {
-				if (typeof item[`${sort_by_item}`] === 'number') {
-					if(item[`${sort_by_item}`] === Number(req.query.sort_by)) {
-						sort_by = item[`${sort_by_item}`]
-					}
-				} else if (typeof item[`${sort_by_item}`] === 'string') {
-					if(item[`${sort_by_item}`].toLowerCase() === req.query.sort_by) {
-						sort_by = item[`${sort_by_item}`]
-					}
-				}
-			});
-			if(typeof sort_by === 'string'){
-				reagentList = await client.query(
-					`SELECT reagent_sample_info.id, reagent.name, testing_item.name AS item, reference_materials.chemical_name, testing_info.batch_id, reagent.prepare_date, reagent.expiry_date, reagent.prepared_by FROM reagent_sample_info JOIN reagent ON reagent_sample_info.reagent_id = reagent.id LEFT OUTER JOIN testing_info ON reagent_sample_info.testing_info_id = testing_info.id LEFT OUTER JOIN reference_materials ON reagent.reference_materials_id = reference_materials.id JOIN testing_item ON reagent.testing_item_id = testing_item.id WHERE ${sort_by_item} like '%${sort_by}%' ORDER BY ${order_by} ${order_by_ascending}`
-					)
-			} else {
-				reagentList = await client.query(
-					`SELECT reagent_sample_info.id, reagent.name, testing_item.name AS item, reference_materials.chemical_name, testing_info.batch_id, reagent.prepare_date, reagent.expiry_date, reagent.prepared_by FROM reagent_sample_info JOIN reagent ON reagent_sample_info.reagent_id = reagent.id LEFT OUTER JOIN testing_info ON reagent_sample_info.testing_info_id = testing_info.id LEFT OUTER JOIN reference_materials ON reagent.reference_materials_id = reference_materials.id JOIN testing_item ON reagent.testing_item_id = testing_item.id WHERE ${sort_by_item} = ${sort_by} ORDER BY ${order_by} ${order_by_ascending}`
-					)
-				}
-		} else {
-			reagentList = await client.query(
-				`SELECT reagent_sample_info.id, reagent.name, testing_item.name AS item, reference_materials.chemical_name, testing_info.batch_id, reagent.prepare_date, reagent.expiry_date, reagent.prepared_by FROM reagent_sample_info JOIN reagent ON reagent_sample_info.reagent_id = reagent.id LEFT OUTER JOIN testing_info ON reagent_sample_info.testing_info_id = testing_info.id LEFT OUTER JOIN reference_materials ON reagent.reference_materials_id = reference_materials.id JOIN testing_item ON reagent.testing_item_id = testing_item.id ORDER BY ${order_by} ${order_by_ascending}`
-			)
-		}
+		reagentList = await client.query(
+			`SELECT reagent_sample_info.id, reagent.name, testing_item.name AS item, reference_materials.chemical_name, testing_info.batch_id, reagent.prepare_date, reagent.expiry_date, reagent.prepared_by FROM reagent_sample_info JOIN reagent ON reagent_sample_info.reagent_id = reagent.id LEFT OUTER JOIN testing_info ON reagent_sample_info.testing_info_id = testing_info.id LEFT OUTER JOIN reference_materials ON reagent.reference_materials_id = reference_materials.id JOIN testing_item ON reagent.testing_item_id = testing_item.id ORDER BY ${order_by} ${order_by_ascending}`
+		)
 		if (reagentList.rows.length === 0) {
 			data = []
 		} else {
@@ -142,8 +116,6 @@ const putReagent = async (req: express.Request, res: express.Response) => {
 	}
 	res.json('Edited')
 }
-
-
 
 reagentRoutes.get('/reagent_list', getReagent)
 reagentRoutes.post('/reagent_list', postReagent)

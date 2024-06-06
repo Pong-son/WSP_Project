@@ -1,6 +1,6 @@
 import express from 'express';
 import { client } from '../index';
-import { pagination } from '../pagination'
+import { pagination } from '../utilities/pagination'
 
 const testingItemRoutes = express.Router()
 
@@ -11,38 +11,11 @@ const getTestingItem = async (req: express.Request, res: express.Response) => {
 		let limit: number = req.query.limit?Number(req.query.limit):10
 		let order_by:string = req.query.order_by?req.query.order_by.toString():'id'
 		let order_by_ascending:string = req.query.order_by_ascending === 'true'?'':'DESC'
-		let sort_by_item = req.query.sort_by_item?req.query.sort_by_item:''
-		let sort_by = req.query.sort_by?req.query.sort_by:''
 
 		let testingItemList:any = []
-		if (sort_by) {
-			testingItemList = await client.query('select * from testing_item')
-			await testingItemList.rows?.forEach((item:any) => {
-				console.log(typeof item[`${sort_by_item}`])
-				if (typeof item[`${sort_by_item}`] === 'number') {
-					if(item[`${sort_by_item}`] === Number(req.query.sort_by)) {
-						sort_by = item[`${sort_by_item}`]
-					}
-				} else if (typeof item[`${sort_by_item}`] === 'string') {
-					if(item[`${sort_by_item}`].toLowerCase() === req.query.sort_by) {
-						sort_by = item[`${sort_by_item}`]
-					}
-				}
-			});
-			if(typeof sort_by === 'string'){
-				testingItemList = await client.query(
-					`select * from testing_item WHERE ${sort_by_item} like '%${sort_by}%' ORDER BY ${order_by} ${order_by_ascending}`
-				)
-			} else {
-				testingItemList = await client.query(
-					`select * from testing_item WHERE ${sort_by_item} = ${sort_by} ORDER BY ${order_by} ${order_by_ascending}`
-				)
-			}
-		} else {
-			testingItemList = await client.query(
-				`select * from testing_item ORDER BY ${order_by} ${order_by_ascending}`
-			)
-		}
+		testingItemList = await client.query(
+			`select * from testing_item ORDER BY ${order_by} ${order_by_ascending}`
+		)
 		if (testingItemList.rows.length === 0) {
 			data = []
 		} else {

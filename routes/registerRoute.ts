@@ -1,7 +1,7 @@
 import express from 'express';
 import { client } from '../index';
-import { User } from '../module';
-import { hashPassword } from '../hash'
+import { User } from '../utilities/module';
+import { hashPassword } from '../utilities/hash'
 
 const registerRoutes = express.Router()
 

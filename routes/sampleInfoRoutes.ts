@@ -1,6 +1,6 @@
 import express from 'express';
 import { client } from '../index';
-import { pagination } from '../pagination'
+import { pagination } from '../utilities/pagination'
 
 const sampleInfoRoutes = express.Router()
 
@@ -11,38 +11,11 @@ const getSampleInfo = async (req: express.Request, res: express.Response) => {
 		let limit: number = req.query.limit?Number(req.query.limit):10
 		let order_by:string = req.query.order_by?req.query.order_by.toString():'id'
 		let order_by_ascending:string = req.query.order_by_ascending === 'true'?'':'DESC'
-		let sort_by_item = req.query.sort_by_item?req.query.sort_by_item:''
-		let sort_by = req.query.sort_by?req.query.sort_by:''
 
 		let sampleInfoList:any = []
-		if (sort_by) {
-			sampleInfoList = await client.query(`SELECT testing_info.id, sample_info.sample_receive_date, sample_info.analysis_date, testing_item.name, testing_info.batch_id FROM testing_info INNER JOIN sample_info ON testing_info.sample_info_id = sample_info.id INNER JOIN testing_item ON testing_info.testing_item_id = testing_item.id`)
-
-			await sampleInfoList.rows?.forEach((item:any) => {
-				if (typeof item[`${sort_by_item}`] === 'number') {
-					if(item[`${sort_by_item}`] === Number(req.query.sort_by)) {
-						sort_by = item[`${sort_by_item}`]
-					}
-				} else if (typeof item[`${sort_by_item}`] === 'string') {
-					if(item[`${sort_by_item}`].toLowerCase() === req.query.sort_by) {
-						sort_by = item[`${sort_by_item}`]
-					}
-				}
-			});
-			if(typeof sort_by === 'string'){
-				sampleInfoList = await client.query(
-					`SELECT testing_info.id, sample_info.sample_receive_date, sample_info.analysis_date, testing_item.name, testing_info.batch_id FROM testing_info INNER JOIN sample_info ON testing_info.sample_info_id = sample_info.id INNER JOIN testing_item ON testing_info.testing_item_id = testing_item.id WHERE ${sort_by_item} like '%${sort_by}%' ORDER BY ${order_by} ${order_by_ascending}`
-				)
-			} else {
-				sampleInfoList = await client.query(
-					`SELECT testing_info.id, sample_info.sample_receive_date, sample_info.analysis_date, testing_item.name, testing_info.batch_id FROM testing_info INNER JOIN sample_info ON testing_info.sample_info_id = sample_info.id INNER JOIN testing_item ON testing_info.testing_item_id = testing_item.id WHERE ${sort_by_item} = ${sort_by} ORDER BY ${order_by} ${order_by_ascending}`
-				)
-			}
-		} else {
-			sampleInfoList = await client.query(
-				`SELECT testing_info.id, sample_info.sample_receive_date, sample_info.analysis_date, testing_item.name, testing_info.batch_id FROM testing_info INNER JOIN sample_info ON testing_info.sample_info_id = sample_info.id INNER JOIN testing_item ON testing_info.testing_item_id = testing_item.id ORDER BY ${order_by} ${order_by_ascending}`
-			)
-		}
+		sampleInfoList = await client.query(
+			`SELECT testing_info.id, sample_info.sample_receive_date, sample_info.analysis_date, testing_item.name, testing_info.batch_id FROM testing_info INNER JOIN sample_info ON testing_info.sample_info_id = sample_info.id INNER JOIN testing_item ON testing_info.testing_item_id = testing_item.id ORDER BY ${order_by} ${order_by_ascending}`
+		)
 		if (sampleInfoList.rows.length === 0) {
 			data = []
 		} else {

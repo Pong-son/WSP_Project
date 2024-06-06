@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Lab System</title>
   <link rel="stylesheet" href="index.css" />
   <link
   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -16,39 +16,12 @@
   <div id="mainContent" class="container-fluid ">
     <div id="navBar">
     </div>
-    <div class="modal fade" tabindex="-1" id="loginModal" aria-labelledby="loginModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="loginModalLabel">Login</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form action="/login" method="post" id="loginForm">
-              <input type="text" name="userName" id="userName" class="form-control" placeholder="Username" aria-label="username"/>
-              <br />
-              <input type="password" name="passWord" id="passWord"class="form-control" placeholder="Password" aria-label="Password"/>
-              <br />
-              <button type="submit" data-bs-dismiss="modal">Login</button>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="row">
       <div id="page_title">
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#orderModal">
           Add new order
         </button>
-        <div class="d-flex" role="search">
-          <select id="search_select" class="form-select">
-          </select>
-          <input id="search_item" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" disabled>
-          <button id="search_btn" class="btn btn-success" disabled>Search</button>
-        </div>
+        <div id="search_controller" class="d-flex" role="search"></div>
       </div>
       <div class="modal fade" tabindex="-1" id="orderModal" aria-labelledby="orderModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -79,6 +52,10 @@
                   <label class="input-group-text" for="confirm_date">Confirm Date</label>
                   <input type="date" class="form-control" aria-label="Confirm Date" id="confirm_date">
                 </div>
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="order_by">Order By</label>
+                  <input type="text" class="form-control" aria-label="Order By" id="order_by">
+                </div>
                 <div id="warn_notice" class="text-warning-emphasis"></div>
                 <button type="submit" disabled id="submit_btn" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
                 <button type="reset" id="reset_btn" class="btn btn-primary">Reset</button>
@@ -100,9 +77,9 @@
               <th scope="col" data-th="product"><span data-th="product">Product</span><span class="material-symbols-outlined" data-th="product" data-arrow="product"></span></th>
               <th scope="col" data-th="price"><span data-th="price">Price</span><span class="material-symbols-outlined" data-th="price" data-arrow="price"></span></th>
               <th scope="col" data-th="confirm_date"><span data-th="confirm_date">Order Confirm Date</span><span class="material-symbols-outlined" data-th="confirm_date" data-arrow="confirm_date"></span></th>
-              <th scope="col" data-th="username"><span data-th="username">Order By</span><span class="material-symbols-outlined" data-th="username" data-arrow="username"></span></th>
-              <th scope="col">Edit</th>
-              <th scope="col">Delete</th>
+              <th scope="col" data-th="order_by"><span data-th="order_by">Order By</span><span class="material-symbols-outlined" data-th="order_by" data-arrow="order_by"></span></th>
+              <th class="admin_hide" scope="col">Edit</th>
+              <th class="admin_hide" scope="col">Delete</th>
             </tr>
           </thead>
           <tbody class="table-group-divider" id="orders_table">

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Lab System</title>
   <link rel="stylesheet" href="index.css" />
   <link
   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -16,39 +16,12 @@
   <div id="mainContent" class="container-fluid ">
     <div id="navBar">
     </div>
-    <div class="modal fade" tabindex="-1" id="loginModal" aria-labelledby="loginModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="loginModalLabel">Login</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form action="/login" method="post" id="loginForm">
-              <input type="text" name="userName" id="userName" class="form-control" placeholder="Username" aria-label="username"/>
-              <br />
-              <input type="password" name="passWord" id="passWord"class="form-control" placeholder="Password" aria-label="Password"/>
-              <br />
-              <button type="submit" data-bs-dismiss="modal">Login</button>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="row">
       <div id="page_title">
         <button type="button" id="add_new_btn" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sampleInfoModal">
           Add new sample
         </button>
-        <div class="d-flex" role="search">
-          <select id="search_select" class="form-select">
-          </select>
-          <input id="search_item" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" disabled>
-          <button id="search_btn" class="btn btn-success" disabled>Search</button>
-        </div>
+        <div id="search_controller" class="d-flex" role="search"></div>
       </div>
       <div class="modal fade" tabindex="-1" id="sampleInfoModal" aria-labelledby="sampleInfoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -95,8 +68,8 @@
               <th scope="col" data-th="analysis_date"><span data-th="analysis_date">Analysis Date</span><span class="material-symbols-outlined" data-th="analysis_date" data-arrow="analysis_date"></span></th>
               <th scope="col" data-th="name"><span data-th="name">Item Name</span><span class="material-symbols-outlined" data-th="name" data-arrow="name"></span></th>
               <th scope="col" data-th="batch_id"><span data-th="batch_id">Batch No.</span><span class="material-symbols-outlined" data-th="batch_id" data-arrow="batch_id"></span></th>
-              <th scope="col">Edit</th>
-              <th scope="col">Delete</th>
+              <th class="admin_hide" scope="col">Edit</th>
+              <th class="admin_hide" scope="col">Delete</th>
             </tr>
           </thead>
           <tbody class="table-group-divider" id="sample_info_table">

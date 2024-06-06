@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Lab System</title>
 		<link rel="stylesheet" href="index.css" />
   <link
   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -16,46 +16,19 @@
 		<div id="mainContent" class="container-fluid ">
 			<div id="navBar">
 			</div>
-			<div class="modal fade" tabindex="-1" id="loginModal" aria-labelledby="loginModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content">
-						<div class="modal-header bg-primary">
-							<h5 class="modal-title" id="loginModalLabel">Login</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form action="/login" method="post" id="loginForm">
-								<input type="text" name="userName" id="userName" class="form-control" placeholder="Username" aria-label="username"/>
-								<br />
-								<input type="password" name="passWord" id="passWord"class="form-control" placeholder="Password" aria-label="Password"/>
-								<br />
-								<button type="submit" data-bs-dismiss="modal">Login</button>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</div>
-			</div>
 			<div class="row">
 				<div id="page_title">
 					<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#userModal">
 						Add new user
 					</button>
-					<div class="d-flex" role="search">
-						<select id="search_select" class="form-select">
-						</select>
-						<input id="search_item" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" disabled>
-						<button id="search_btn" class="btn btn-success" disabled>Search</button>
-					</div>
+					<div id="search_controller" class="d-flex" role="search"></div>
 				</div>
 				<!-- form for create new user -->
 				<div class="modal fade" tabindex="-1" id="userModal" aria-labelledby="userModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-header bg-primary">
-								<h5 class="modal-title text-light" id="userModalLabel">New User</h5>cript
+								<h5 class="modal-title text-light" id="userModalLabel">New User</h5>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
@@ -72,10 +45,16 @@
 									<div class="input-group mb-3">
 										<label class="input-group-text" for="rPassWord">Password</label>
 										<input type="password" class="form-control" id="rPassWord" data_form="rPassWord">
+										<span class="input-group-text material-symbols-outlined" id="rpw_visibility">
+											visibility
+										</span>
 									</div>
 									<div class="input-group mb-3">
 										<label class="input-group-text" for="cfmRPassWord">Confirm Password</label>
 										<input type="password" class="form-control" id="cfmRPassWord">
+										<span class="input-group-text material-symbols-outlined" id="cfmRpw_visibility">
+											visibility
+										</span>
 									</div>
 									<br />
 									<div id="warn_notice" class="text-warning-emphasis"></div>
@@ -103,10 +82,16 @@
 									<div class="input-group mb-3">
 										<label class="input-group-text" for="newPassword">New Password</label>
 										<input type="password" class="form-control" id="newPassword" data_form="newPassword">
+										<span class="input-group-text material-symbols-outlined" id="newpw_visibility">
+											visibility
+									</span>
 									</div>
 									<div class="input-group mb-3">
 										<label class="input-group-text" for="cfmNewPassword">Confirm New Password</label>
 										<input type="password" class="form-control" id="cfmNewPassword" data_form="cfmNewPassword">
+										<span class="input-group-text material-symbols-outlined" id="cfmNewpw_visibility">
+											visibility
+									</span>
 									</div>
 									<br />
 									<div id="regWarn_change_pw"></div>
@@ -126,7 +111,7 @@
 						<thead>
 							<tr>
 								<th scope="col" data-th="id"><span data-th="id">id</span><span class="material-symbols-outlined" data-th="id" data-arrow="id">arrow_downward</span></th>
-								<th scope="col" data-th="name"><span data-th="name">User Name</span><span class="material-symbols-outlined" data-th="name" data-arrow="name"></span></th>
+								<th scope="col" data-th="username"><span data-th="username">User Name</span><span class="material-symbols-outlined" data-th="username" data-arrow="username"></span></th>
 								<th scope="col" data-th="email"><span data-th="email">E-mail</span><span class="material-symbols-outlined" data-th="email" data-arrow="email"></span></th>
 								<th scope="col" data-th="is_admin"><span data-th="is_admin">Is_admin</span><span class="material-symbols-outlined" data-th="is_admin" data-arrow="is_admin"></span></th>
 								<th scope="col" data-th="password"><span data-th="password">Change Password</span><span class="material-symbols-outlined" data-th="password" data-arrow="password"></span></th>

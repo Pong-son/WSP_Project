@@ -1,7 +1,7 @@
 import express from 'express';
 import { client } from '../index';
-import { pagination } from '../pagination'
-import { hashPassword } from '../hash'
+import { pagination } from '../utilities/pagination'
+import { hashPassword } from '../utilities/hash'
 
 const usersRoutes = express.Router()
 
@@ -12,38 +12,11 @@ const getUsers = async (req: express.Request, res: express.Response) => {
 		let limit: number = req.query.limit?Number(req.query.limit):10
 		let order_by:string = req.query.order_by?req.query.order_by.toString():'id'
 		let order_by_ascending:string = req.query.order_by_ascending === 'true'?'':'DESC'
-		let sort_by_item = req.query.sort_by_item?req.query.sort_by_item:''
-		let sort_by = req.query.sort_by?req.query.sort_by:''
 
 		let usersList:any = []
-		if (sort_by) {
-			usersList = await client.query('select * from users')
-			await usersList.rows?.forEach((item:any) => {
-				console.log(typeof item[`${sort_by_item}`])
-				if (typeof item[`${sort_by_item}`] === 'number') {
-					if(item[`${sort_by_item}`] === Number(req.query.sort_by)) {
-						sort_by = item[`${sort_by_item}`]
-					}
-				} else if (typeof item[`${sort_by_item}`] === 'string') {
-					if(item[`${sort_by_item}`].toLowerCase() === req.query.sort_by) {
-						sort_by = item[`${sort_by_item}`]
-					}
-				}
-			});
-			if(typeof sort_by === 'string'){
-				usersList = await client.query(
-					`select * from users WHERE ${sort_by_item} like '%${sort_by}%' ORDER BY ${order_by} ${order_by_ascending}`
-				)
-			} else {
-				usersList = await client.query(
-					`select * from users WHERE ${sort_by_item} = ${sort_by} ORDER BY ${order_by} ${order_by_ascending}`
-				)
-			}
-		} else {
-			usersList = await client.query(
-				`select * from users ORDER BY ${order_by} ${order_by_ascending}`
-			)
-		}
+		usersList = await client.query(
+			`select * from users ORDER BY ${order_by} ${order_by_ascending}`
+		)
 		if (usersList.rows.length === 0) {
 			data = []
 		} else {

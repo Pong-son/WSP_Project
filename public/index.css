@@ -106,3 +106,7 @@ nav li:hover {
 .hide {
 	display: none;
 }
+
+.admin_hide {
+	display: none;
+}

@@ -1,7 +1,6 @@
 import express from 'express';
 import { client } from '../index';
-import { pagination } from '../pagination'
-
+import { pagination } from '../utilities/pagination'
 
 const equipmentRoutes = express.Router()
 
@@ -12,37 +11,11 @@ const getEquipment = async (req: express.Request, res: express.Response) => {
 		let limit: number = req.query.limit?Number(req.query.limit):10
 		let order_by:string = req.query.order_by?req.query.order_by.toString():'id'
 		let order_by_ascending:string = req.query.order_by_ascending === 'true'?'':'DESC'
-		let sort_by_item = req.query.sort_by_item?req.query.sort_by_item:''
-		let sort_by = req.query.sort_by?req.query.sort_by:''
 
 		let equipmentList:any = []
-		if (sort_by) {
-			equipmentList = await client.query(`SELECT equipment.id, name, brand, model, calibration_period.parameter, calibration_period.calibration_period, calibration_date, expiry_date FROM equipment INNER JOIN calibration_period ON equipment.calibration_period_id = calibration_period.id`)
-			await equipmentList.rows?.forEach((item:any) => {
-				if (typeof item[`${sort_by_item}`] === 'number') {
-					if(item[`${sort_by_item}`] === Number(req.query.sort_by)) {
-						sort_by = item[`${sort_by_item}`]
-					}
-				} else if (typeof item[`${sort_by_item}`] === 'string') {
-					if(item[`${sort_by_item}`].toLowerCase() === req.query.sort_by) {
-						sort_by = item[`${sort_by_item}`]
-					}
-				}
-			});
-			if(typeof sort_by === 'string'){
-				equipmentList = await client.query(
-					`SELECT equipment.id, name, brand, model, calibration_period.parameter, calibration_period.calibration_period, calibration_date, expiry_date FROM equipment INNER JOIN calibration_period ON equipment.calibration_period_id = calibration_period.id WHERE ${sort_by_item} like '%${sort_by}%' ORDER BY ${order_by} ${order_by_ascending}`
-				)
-			} else {
-				equipmentList = await client.query(
-					`SELECT equipment.id, name, brand, model, calibration_period.parameter, calibration_period.calibration_period, calibration_date, expiry_date FROM equipment INNER JOIN calibration_period ON equipment.calibration_period_id = calibration_period.id WHERE ${sort_by_item} = ${sort_by} ORDER BY ${order_by} ${order_by_ascending}`
-				)
-			}
-		} else {
-			equipmentList = await client.query(
-				`SELECT equipment.id, name, brand, model, calibration_period.parameter, calibration_period.calibration_period, calibration_date, expiry_date FROM equipment INNER JOIN calibration_period ON equipment.calibration_period_id = calibration_period.id ORDER BY ${order_by} ${order_by_ascending}`
-			)
-		}
+		equipmentList = await client.query(
+			`SELECT equipment.id, name, brand, model, calibration_period.parameter, calibration_period.calibration_period, calibration_date, expiry_date FROM equipment INNER JOIN calibration_period ON equipment.calibration_period_id = calibration_period.id ORDER BY ${order_by} ${order_by_ascending}`
+		)
 		if (equipmentList.rows.length === 0) {
 			data = []
 		} else {
@@ -107,8 +80,6 @@ const putEquipment = async (req: express.Request, res: express.Response) => {
 	}
 	res.json('Edited')
 }
-
-
 
 equipmentRoutes.get('/equipment_list', getEquipment)
 equipmentRoutes.post('/equipment_list', postEquipment)

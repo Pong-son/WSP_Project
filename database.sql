@@ -33,8 +33,7 @@ CREATE TABLE orders (
   product TEXT,
   price INT,
   confirm_date DATE,
-  user_id INT,
-  FOREIGN KEY (user_id) REFERENCES users(id),
+  order_by TEXT,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );

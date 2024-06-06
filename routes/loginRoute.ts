@@ -1,6 +1,6 @@
 import express from 'express';
 import { client } from '../index';
-import { checkPassword } from '../hash'
+import { checkPassword } from '../utilities/hash'
 
 const loginRoutes = express.Router()
 

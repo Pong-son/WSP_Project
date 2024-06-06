@@ -1,12 +1,10 @@
-import { getData } from './get_data.js'
-import { pagination } from './pagination.js'
-import { sort_by_item, sort_by } from'./search.js';
+import { getData } from './utilities/get_data.js'
+import { check_page_status, each_page_show, pagination, current_page } from './utilities/pagination.js'
+import { search_ftn, search, sort_by_item, sort_by } from'./utilities/search.js';
+import { order_by, order_by_ascending } from './utilities/order_by.js'
 
 let useful_link_table = document.querySelector('#useful_link')
-let each_page_show = Number(document.querySelector('#each_page_show')?.value);
-let current_page = 1;
-let order_by = 'id';
-let order_by_ascending = true;
+
 let data = {};
 let data_in_table = [];
 
@@ -78,15 +76,15 @@ const loadUsefulLinkTable = async () => {
 
       pagination(data.no_of_page)
       check_page_status(data)
-      
-      document.querySelector('[data-pre]')?.addEventListener('click',() => {
-        current_page = current_page - 1
-        loadUsefulLinkTable()
-      })
-      document.querySelector('[aria-label="Next"]')?.addEventListener('click',() => {
-        current_page = current_page + 1
-        loadUsefulLinkTable()
-      })
+      search_ftn(data)
+
+      if(search(data.data, sort_by_item, sort_by).length !== 0) {
+        data_in_table = search(data.data, sort_by_item, sort_by)
+      } else if (sort_by_item) {
+        data.data = []
+      } else {
+        ''
+      }
       // generate table
       if(data.data?.length === undefined || data.data?.length === 0) {
         let no_of_col = document.querySelectorAll('th').length
@@ -102,12 +100,12 @@ const loadUsefulLinkTable = async () => {
           <input class="hide" type='text' data-link="${link.id}" value=${link.link}>
           </td>
           <td><input class="form-control" disabled type='text' data-used-for="${link.id}" value=${link.used_for}></td>
-          <td>
+          <td class=${window.sessionStorage.getItem('admin')?'':'admin_hide'}>
             <button data-edit="${link.id}">Edit</button>
             <button data-done="${link.id}" class="hide">Done</button>
             <button data-cancel="${link.id}" class="hide">Cancel</button>
           </td>
-          <td>
+          <td class=${window.sessionStorage.getItem('admin')?'':'admin_hide'}>
           <button data-delete=${link.id}>Delete</button>
           </td>
           </tr>`
@@ -116,33 +114,21 @@ const loadUsefulLinkTable = async () => {
 
       // controller for the and delete btn
       document.querySelectorAll('[data-edit]')?.forEach(edit => {
-        if (window.sessionStorage.getItem('admin')) {
-          edit.addEventListener('click', (e) => {
-            const target = e.target.getAttribute('data-edit')
-            document.querySelector(`[data-web="${target}"]`).classList.add("hide")
-            document.querySelector(`[data-title="${target}"]`).classList.remove("hide")
-            document.querySelector(`[data-link="${target}"]`).classList.remove("hide")
-            document.querySelector(`[data-used-for="${target}"]`).removeAttribute("disabled")
-            document.querySelector(`[data-done="${target}"]`).classList.remove('hide')
-            document.querySelector(`[data-cancel="${target}"]`).classList.remove('hide')
-            document.querySelector(`[data-edit="${target}"]`).classList.add('hide')
-          })
-        } else {
-          edit.addEventListener('click', () => {
-            alert('Please Find Admin!')
-          })
-        }
+        edit.addEventListener('click', (e) => {
+          const target = e.target.getAttribute('data-edit')
+          document.querySelector(`[data-web="${target}"]`).classList.add("hide")
+          document.querySelector(`[data-title="${target}"]`).classList.remove("hide")
+          document.querySelector(`[data-link="${target}"]`).classList.remove("hide")
+          document.querySelector(`[data-used-for="${target}"]`).removeAttribute("disabled")
+          document.querySelector(`[data-done="${target}"]`).classList.remove('hide')
+          document.querySelector(`[data-cancel="${target}"]`).classList.remove('hide')
+          document.querySelector(`[data-edit="${target}"]`).classList.add('hide')
+        })
       })
       document.querySelectorAll('[data-delete]')?.forEach(del => {
-        if (window.sessionStorage.getItem('admin')) {
-          del.addEventListener('click', (e) => {
-            delFtn(e)
-          })
-        } else {
-          del.addEventListener('click', () => {
-            alert('Please Find Admin!')
-          })
-        }
+        del.addEventListener('click', (e) => {
+          delFtn(e)
+        })
       })
       document.querySelectorAll('[data-done]')?.forEach(done => {
         done.addEventListener('click', (e) => {
@@ -169,23 +155,8 @@ const loadUsefulLinkTable = async () => {
           document.querySelector(`[data-edit="${target}"]`).classList.remove('hide')
         })
       })
-      document.querySelectorAll('[data-page]')?.forEach(page => {
-        page.addEventListener('click',async e => {
-          const page = e.target.getAttribute('data-page')
-          current_page = page
-          loadUsefulLinkTable()
-        })
-      })
-
-      // generate select content to search
-      if(data.data?.length !== undefined && data.data?.length !== 0) {
-        let search_select = document.querySelector('#search_select')
-        search_select.innerHTML = '<option selected>- Search By -</option>'
-        let item = Object?.keys(data.data[0])
-        for(let i = 0; i < item.length; i++) {
-          search_select.innerHTML += `<option value='${item[i]}'>${item[i]}</option>`
-        }
-      }
+      
+      search_ftn(data)
     }
   } catch (e) {
     console.log(e)
@@ -220,38 +191,5 @@ const editFtn = async (e) => {
   })
   loadUsefulLinkTable()
 }
-
-document.querySelector('#each_page_show')?.addEventListener('input', () => {
-  each_page_show = Number(document.querySelector('#each_page_show').value)
-  document.querySelector('#each_page_show').blur()
-  loadUsefulLinkTable()
-})
-
-const check_page_status = (data) => {
-  let pre_btn = document.querySelector('[aria-label="Previous"]')
-  let next_btn = document.querySelector('[aria-label="Next"]')
-  document.querySelector(`[data-page="${current_page}"]`)?.classList.add('disabled')
-  data.current_page === 1?pre_btn.classList.add('disabled'):pre_btn.classList.remove('disabled')
-  data.current_page === data.no_of_page?next_btn.classList.add('disabled'):next_btn.classList.remove('disabled')
-}
-
-document.querySelectorAll('[data-th]').forEach(title => {
-  let path = window.location.pathname
-  if (path === '/') {
-    title.addEventListener('click',(e) => {
-      e.stopPropagation()
-      document.querySelector(`[data-arrow=${order_by}]`).textContent = ''
-      if (order_by !== e.target.getAttribute('data-th')) {
-        order_by = e.target.getAttribute('data-th')
-        order_by_ascending = true
-        document.querySelector(`[data-arrow=${order_by}]`).textContent = 'arrow_downward'
-      } else {
-        order_by_ascending = !order_by_ascending
-        order_by_ascending?document.querySelector(`[data-arrow=${order_by}]`).textContent = 'arrow_downward':document.querySelector(`[data-arrow=${order_by}]`).textContent = 'arrow_upward'
-      }
-      loadUsefulLinkTable()
-    })
-  }
-})
 
 export { loadUsefulLinkTable }

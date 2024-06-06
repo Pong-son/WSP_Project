@@ -41,7 +41,7 @@ document
         content: content
       })
     })
-    const result = await res.json()
+    await res.json()
 
     document.querySelector('#topic').value = ''
     document.querySelector('#content').value = ''
@@ -58,7 +58,6 @@ const loadNotice = async () => {
 			const noticesContainer = document.querySelector('#notices_content')
 			if(notices.length === 0) {
 				noticesContainer.innerHTML = ''
-				noticesContainer.innerHTML = `<tr><th class="text-center" colspan=${no_of_col}>No DATA</th></tr>`
 			} else if (window.location.pathname === '/') {
 				noticesContainer.innerHTML = ''
 				for (let notice of notices) {
@@ -108,9 +107,6 @@ const loadNotice = async () => {
 					loadNotice()
 				})
 			})
-			document.querySelector('#add_notice').setAttribute('data-bs-toggle','tooltip')
-			document.querySelector('#add_notice').setAttribute('data-bs-placement','left')
-			document.querySelector('#add_notice').setAttribute('data-bs-title','Add new notice')
 
 			const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 			tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
